@@ -313,6 +313,16 @@
 @media (max-width: 768px) {
   .timeline-title {
     font-size: 2rem;
+    margin-bottom: 30px;
+  }
+  
+  /* Slower animations for tablets */
+  .empty-icon {
+    animation-duration: 3s;
+  }
+  
+  .timeline-item {
+    animation-duration: 0.8s;
   }
   
   .timeline-container {
@@ -328,6 +338,7 @@
   .dream-card {
     padding: 20px;
     margin-left: 15px;
+    border-radius: 15px;
   }
   
   .dream-header {
@@ -339,6 +350,41 @@
   .dream-title {
     margin-right: 0;
     margin-bottom: 10px;
+    font-size: 1.3rem;
+  }
+  
+  .dream-actions {
+    align-self: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .analyze-button,
+  .edit-button,
+  .delete-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    touch-action: manipulation;
+  }
+  
+  .dream-meta {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .dream-content {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  
+  .dream-tags {
+    gap: 6px;
+  }
+  
+  .tag {
+    font-size: 0.8rem;
+    padding: 3px 10px;
   }
   
   .edit-controls {
@@ -348,28 +394,65 @@
   
   .edit-actions {
     justify-content: stretch;
+    gap: 12px;
   }
   
   .save-button,
   .cancel-button {
     flex: 1;
+    min-height: 44px;
+    font-size: 1rem;
+    touch-action: manipulation;
+  }
+  
+  .edit-title-input,
+  .edit-content-input {
+    font-size: 1rem;
+    padding: 12px 15px;
+  }
+  
+  .edit-mood-select,
+  .edit-tags-input {
+    font-size: 1rem;
+    padding: 12px 15px;
+    min-height: 44px;
   }
 }
 
 @media (max-width: 480px) {
+  .timeline-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+  
+  /* Much slower animations for phones */
+  .empty-icon {
+    animation-duration: 10s !important;
+  }
+  
+  .timeline-item {
+    animation-duration: 1.2s !important;
+  }
+  
+  .timeline-container {
+    padding-left: 20px;
+  }
+  
   .timeline-container::before {
-    left: 12px;
+    left: 10px;
   }
   
   .timeline-marker {
-    left: -15px;
+    left: -16px;
     width: 10px;
     height: 10px;
+    border-width: 2px;
   }
   
   .dream-card {
     margin-left: 10px;
     padding: 15px;
+    border-radius: 12px;
   }
   
   .dream-title {
@@ -377,6 +460,89 @@
   }
   
   .dream-actions {
-    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    justify-content: flex-end;
   }
+  
+  .analyze-button,
+  .edit-button,
+  .delete-button {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  
+  .dream-content {
+    font-size: 0.95rem;
+  }
+  
+  .dream-meta {
+    font-size: 0.9rem;
+  }
+  
+  .dream-mood {
+    font-size: 1.1rem;
+  }
+  
+  .dream-date {
+    font-size: 0.85rem;
+  }
+  
+  .empty-state {
+    padding: 30px 20px;
+    border-radius: 15px;
+  }
+  
+  .empty-icon {
+    font-size: 3rem;
+  }
+  
+  .empty-state h3 {
+    font-size: 1.3rem;
+  }
+  
+  .empty-state p {
+    font-size: 1rem;
+  }
+}
+
+/* Better touch interactions */
+@media (hover: none) and (pointer: coarse) {
+  .analyze-button:hover,
+  .edit-button:hover,
+  .delete-button:hover,
+  .save-button:hover,
+  .cancel-button:hover {
+    transform: none;
+  }
+  
+  .analyze-button:active,
+  .edit-button:active,
+  .delete-button:active {
+    transform: scale(0.9);
+    transition: transform 0.1s ease;
+  }
+  
+  .save-button:active,
+  .cancel-button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  .dream-card:hover {
+    transform: none;
+    box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
+  }
+}
+
+/* Improved scrolling performance */
+.timeline-container {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.dream-card {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }

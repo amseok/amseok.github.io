@@ -7,6 +7,7 @@ function DreamAnalyzer({ dream, onClose, onUpdateDreamAnalysis }) {
     const [loading, setLoading] = useState(false)
     const [apiKey, setApiKey] = useState(localStorage.getItem('openai_api_key') || '')
     const [showApiKeyInput, setShowApiKeyInput] = useState(!apiKey)
+    const [copySuccess, setCopySuccess] = useState(false)
 
     const saveApiKey = () => {
         localStorage.setItem('openai_api_key', apiKey)
@@ -16,6 +17,13 @@ function DreamAnalyzer({ dream, onClose, onUpdateDreamAnalysis }) {
     const analyzeDream = async () => {
         if (!apiKey) {
             setShowApiKeyInput(true)
+            return
+        }
+
+        // Check if dream content has at least 10 words
+        const wordCount = dream.content.trim().split(/\s+/).filter(word => word.length > 0).length
+        if (wordCount < 10) {
+            setAnalysis('Please write at least 10 words about your dream before requesting an analysis. Dreams with more detail provide better interpretations.')
             return
         }
 
@@ -54,15 +62,16 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
                         }
                     ],
                     max_tokens: 600,
-                    temperature: 0.7
-                })
+                    temperature: 0.7                })
             })
 
             const data = await response.json()
-
+            
             if (data.error) {
                 throw new Error(data.error.message)
-            } setAnalysis(data.choices[0].message.content)
+            }
+            
+            setAnalysis(data.choices[0].message.content)
 
             // Save analysis to dream object
             if (onUpdateDreamAnalysis) {
@@ -75,8 +84,7 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
 
             // Don't save error messages to the dream
         } finally {
-            setLoading(false)
-        }
+            setLoading(false)        }
     }
 
     const rethinkDream = () => {
@@ -85,6 +93,29 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
             onUpdateDreamAnalysis(dream.id, '')
         }
         analyzeDream()
+    }
+
+    const copyAnalysis = async () => {
+        try {
+            await navigator.clipboard.writeText(analysis)
+            setCopySuccess(true)
+            setTimeout(() => setCopySuccess(false), 2000)
+        } catch (err) {
+            console.error('Failed to copy text:', err)
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea')
+            textArea.value = analysis
+            document.body.appendChild(textArea)
+            textArea.select()
+            try {
+                document.execCommand('copy')
+                setCopySuccess(true)
+                setTimeout(() => setCopySuccess(false), 2000)
+            } catch (fallbackErr) {
+                console.error('Fallback copy failed:', fallbackErr)
+            }
+            document.body.removeChild(textArea)
+        }
     }
 
     return (
@@ -122,15 +153,32 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
                         </p>
                     </div>) : (
                     <div className="analysis-section">
-                        
-                        {analysis && (
-                            <div className="analysis-result">
-                                <h4>
-                                    Dream Interpretation:
-                                    {dream.analysis && analysis === dream.analysis && (
-                                        <span className="saved-indicator">💾 Saved</span>
-                                    )}
-                                </h4>
+                          {analysis && (
+                            <div className="analysis-result">                                <div className="analysis-header">
+                                    <h4>
+                                        Dream Interpretation:
+                                        {dream.analysis && analysis === dream.analysis && (
+                                            <span className="saved-indicator">💾 Saved</span>
+                                        )}
+                                    </h4>
+                                    <div className="analysis-actions">
+                                        <button 
+                                            onClick={rethinkDream}
+                                            disabled={loading}
+                                            className="rethink-button-small"
+                                            title="Generate new analysis"
+                                        >
+                                            {loading ? '🔄' : '🔄 Rethink'}
+                                        </button>
+                                        <button 
+                                            onClick={copyAnalysis}
+                                            className={`copy-button ${copySuccess ? 'copy-success' : ''}`}
+                                            title="Copy analysis to clipboard"
+                                        >
+                                            {copySuccess ? '✓ Copied!' : '📋 Copy'}
+                                        </button>
+                                    </div>
+                                </div>
                                 <div className="analysis-content">
                                     <ReactMarkdown
                                         components={{
@@ -151,24 +199,20 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
                                     </ReactMarkdown>
                                 </div>
                             </div>
-                        )}
-
-                        <div className="analysis-buttons">
-                            {!analysis ? (
+                        )}                        <div className="analysis-buttons">
+                            {!analysis && (
                                 <button
                                     onClick={analyzeDream}
-                                    disabled={loading}
+                                    disabled={loading || dream.content.trim().split(/\s+/).filter(word => word.length > 0).length < 10}
                                     className="analyze-dream-button"
+                                    title={dream.content.trim().split(/\s+/).filter(word => word.length > 0).length < 10 ? 
+                                        'Please write at least 10 words about your dream' : 
+                                        'Analyze your dream with AI'}
                                 >
-                                    {loading ? '🔄 Analyzing...' : '✨ Analyze Dream'}
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={rethinkDream}
-                                    disabled={loading}
-                                    className="rethink-button"
-                                >
-                                    {loading ? '🔄 Rethinking...' : '🔄 Rethink Analysis'}
+                                    {loading ? '🔄 Analyzing...' : 
+                                     dream.content.trim().split(/\s+/).filter(word => word.length > 0).length < 10 ? 
+                                     '✨ Write more details (10+ words)' : 
+                                     '✨ Analyze Dream'}
                                 </button>
                             )}
                         </div>

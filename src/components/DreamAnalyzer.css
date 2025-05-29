@@ -302,6 +302,81 @@
   justify-content: space-between;
 }
 
+.analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.analysis-header h4 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.analysis-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rethink-button-small {
+  background: rgba(255, 165, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.rethink-button-small:hover {
+  background: rgba(255, 165, 0, 0.9);
+  transform: translateY(-1px);
+}
+
+.rethink-button-small:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.copy-button {
+  background: rgba(106, 90, 205, 0.7);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.copy-button:hover {
+  background: rgba(106, 90, 205, 0.9);
+  transform: translateY(-1px);
+}
+
+.copy-button.copy-success {
+  background: rgba(144, 238, 144, 0.7);
+  color: #fff;
+}
+
+.copy-button.copy-success:hover {
+  background: rgba(144, 238, 144, 0.9);
+}
+
 .analysis-result h4::before {
   content: '🔮';
   font-size: 1.3rem;
@@ -490,5 +565,177 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .dream-analyzer-overlay {
+    padding: 10px;
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+  
+  .dream-analyzer {
+    width: 100%;
+    max-height: 95vh;
+    margin: 0;
+    border-radius: 20px;
+  }
+  
+  .analyzer-header {
+    padding: 20px;
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .analyzer-header h2 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+  
+  .close-button {
+    align-self: flex-end;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  
+  .dream-summary {
+    padding: 20px;
+  }
+  
+  .dream-summary h3 {
+    font-size: 1.2rem;
+  }
+  
+  .api-key-section {
+    padding: 20px;
+  }
+  
+  .api-key-input-group {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .save-key-button {
+    width: 100%;
+    padding: 15px 20px;
+  }
+  
+  .analysis-section {
+    padding: 20px;
+  }
+  
+  .analyze-dream-button,
+  .rethink-button {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+  
+  .analysis-result {
+    padding: 20px;
+  }
+  
+  .analyzer-footer {
+    padding: 15px 20px;
+  }
+  
+  /* Enhanced touch targets */
+  .close-button {
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+  }
+  
+  .save-key-button,
+  .analyze-dream-button,
+  .rethink-button,
+  .toggle-key-button {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+}
+
+@media (max-width: 480px) {
+  .dream-analyzer-overlay {
+    padding: 5px;
+    padding-top: 10px;
+  }
+  
+  .dream-analyzer {
+    border-radius: 15px;
+    max-height: 98vh;
+  }
+  
+  .analyzer-header {
+    padding: 15px;
+  }
+  
+  .analyzer-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .dream-summary,
+  .api-key-section,
+  .analysis-section {
+    padding: 15px;
+  }
+  
+  .analyzer-footer {
+    padding: 12px 15px;
+  }
+  
+  /* Markdown responsive adjustments */
+  .markdown-h1 {
+    font-size: 1.2rem;
+  }
+  
+  .markdown-h2 {
+    font-size: 1.1rem;
+  }
+  
+  .markdown-h3 {
+    font-size: 1rem;
+  }
+  
+  .markdown-blockquote {
+    margin: 15px 0;
+    padding: 12px 15px;
+  }
+  
+  .markdown-blockquote::before {
+    font-size: 2rem;
+    top: -5px;
+    left: 5px;
+  }
+}
+
+/* Improved scrolling on mobile */
+@media (max-width: 768px) {
+  .dream-analyzer {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Better touch interactions */
+@media (hover: none) and (pointer: coarse) {
+  .close-button:hover,
+  .save-key-button:hover,
+  .analyze-dream-button:hover,
+  .rethink-button:hover,
+  .toggle-key-button:hover {
+    transform: none;
+  }
+  
+  .close-button:active,
+  .save-key-button:active,
+  .analyze-dream-button:active,
+  .rethink-button:active,
+  .toggle-key-button:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
   }
 }

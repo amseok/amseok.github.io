@@ -8,11 +8,65 @@
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
   transition: all 0.3s ease;
+  /* Performance optimizations */
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
-.dream-entry:hover {
-  border-color: rgba(177, 156, 217, 0.4);
-  box-shadow: 0 12px 40px rgba(106, 90, 205, 0.2);
+/* Mobile optimizations - disable expensive effects */
+@media (max-width: 768px) {
+  .dream-entry {
+    /* Disable backdrop-filter on mobile for better performance */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    /* Use solid background instead */
+    background: rgba(25, 25, 46, 0.95);
+    /* Optimize for mobile scrolling */
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
+  }
+  
+  /* Prevent layout shifts during keyboard events */
+  .dream-entry.expanded {
+    transform: translate3d(0, 0, 0);
+    will-change: auto;
+  }
+}
+
+/* Additional mobile-specific optimizations for when form is expanded */
+@media (max-width: 768px) {
+  .dream-form {
+    /* Optimize form for mobile input */
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    will-change: auto;
+    /* Prevent bounce during scroll with keyboard open */
+    overscroll-behavior: contain;
+  }
+  
+  /* Optimize inputs for mobile performance */
+  .dream-title-input,
+  .dream-content-input,
+  .tags-input {
+    /* Prevent expensive repaints during scroll */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: auto;
+    /* Improve touch scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Reduce hover effects on mobile */
+  .expand-button:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3);
+  }
+  
+  .dream-entry:hover {
+    border-color: rgba(177, 156, 217, 0.2);
+    box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
+  }
 }
 
 .expand-button {
@@ -98,8 +152,134 @@
 .dream-content-input:focus {
   outline: none;
   border-color: #9370db;
-  box-shadow: 0 0 20px rgba(147, 112, 219, 0.3);
+  box-shadow: 0 0 20px rgba(147, 112, 219, 0.3);  background: rgba(15, 15, 35, 0.8);
+}
+
+/* Custom Select Dropdown */
+.custom-select-container {
+  position: relative;
+  /* Create new stacking context to ensure dropdown stays on top */
+  z-index: 1;
+}
+
+.custom-select-button {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid rgba(177, 156, 217, 0.3);
+  border-radius: 10px;
+  background: rgba(15, 15, 35, 0.6);
+  color: #e6e6fa;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  /* Ensure button doesn't interfere with dropdown stacking */
+  position: relative;
+  z-index: 1;
+}
+
+.custom-select-button:focus {
+  outline: none;
+  border-color: #9370db;
+  box-shadow: 0 0 15px rgba(147, 112, 219, 0.3);
+}
+
+.custom-select-button:hover {
+  border-color: rgba(177, 156, 217, 0.5);
   background: rgba(15, 15, 35, 0.8);
+}
+
+.selected-mood {
+  flex: 1;
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+  font-size: 0.8rem;
+  color: #b19cd9;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.custom-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(15, 15, 35, 0.95);
+  border: 2px solid rgba(177, 156, 217, 0.4);
+  border-radius: 10px;
+  margin-top: 5px;
+  box-shadow: 0 8px 32px rgba(106, 90, 205, 0.2);
+  backdrop-filter: blur(20px);
+  z-index: 9999;
+  animation: dropdownSlide 0.2s ease-out;
+  /* Force GPU acceleration for better performance - temporarily removed */
+  /* transform: translateZ(0); */
+  /* -webkit-transform: translateZ(0); */
+}
+
+/* Portal-based dropdown - renders at document.body level */
+.custom-dropdown-portal {
+  background: rgba(15, 15, 35, 0.95);
+  border: 2px solid rgba(177, 156, 217, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(106, 90, 205, 0.2);
+  backdrop-filter: blur(20px);
+  animation: dropdownSlide 0.2s ease-out;
+  /* No z-index needed since it's rendered at body level */
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-option {
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  background: transparent;
+  color: #e6e6fa;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  border-bottom: 1px solid rgba(177, 156, 217, 0.1);
+}
+
+.dropdown-option:last-child {
+  border-bottom: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.dropdown-option:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.dropdown-option:hover {
+  background: rgba(106, 90, 205, 0.2);
+  color: #ffffff;
+}
+
+.dropdown-option.selected {
+  background: rgba(147, 112, 219, 0.3);
+  color: #ffffff;
+}
+
+.dropdown-option.selected:hover {
+  background: rgba(147, 112, 219, 0.4);
 }
 
 .mood-label {
@@ -176,20 +356,315 @@
   .dream-entry {
     padding: 20px;
     margin-bottom: 25px;
+    border-radius: 15px;
   }
   
   .expand-button {
     padding: 12px 25px;
     font-size: 1rem;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  .plus-icon {
+    font-size: 1.2rem;
   }
   
   .dream-title-input {
     font-size: 1.1rem;
     padding: 12px 15px;
+    border-radius: 12px;
   }
   
   .dream-content-input {
     padding: 12px 15px;
     min-height: 100px;
+    border-radius: 12px;
+    font-size: 1rem;
+  }
+  
+  /* Custom dropdown mobile styles */
+  .custom-select-button {
+    padding: 12px 15px;
+    font-size: 1rem;
+    min-height: 44px;
+    border-radius: 8px;
+    touch-action: manipulation;
+  }
+  
+  .custom-dropdown {
+    border-radius: 8px;
+    margin-top: 8px;
+    box-shadow: 0 12px 40px rgba(106, 90, 205, 0.3);
+  }
+  
+  .dropdown-option {
+    padding: 14px 15px;
+    font-size: 1rem;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  .dropdown-option:first-child {
+    border-radius: 6px 6px 0 0;
+  }
+  
+  .dropdown-option:last-child {
+    border-radius: 0 0 6px 6px;
+  }
+  
+  .mood-select {
+    padding: 12px 15px;
+    font-size: 1rem;
+    min-height: 44px;
+    border-radius: 8px;
+  }
+  
+  .tags-input {
+    padding: 12px 15px;
+    font-size: 1rem;
+    min-height: 44px;
+    border-radius: 8px;
+  }
+  
+  .submit-button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  .form-group {
+    margin-bottom: 18px;
+  }
+  
+  .mood-label {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dream-entry {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+  }
+  
+  .expand-button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    border-radius: 20px;
+  }
+  
+  .dream-title-input {
+    font-size: 1rem;
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+  
+  .dream-content-input {
+    padding: 10px 12px;
+    min-height: 90px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+  }
+  
+  /* Custom dropdown phone styles */
+  .custom-select-button {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    min-height: 40px;
+    border-radius: 8px;
+  }
+  
+  .custom-dropdown {
+    border-radius: 8px;
+    margin-top: 6px;
+  }
+  
+  .dropdown-option {
+    padding: 12px 12px;
+    font-size: 0.95rem;
+    min-height: 40px;
+  }
+  
+  .mood-select,
+  .tags-input {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    min-height: 40px;
+  }
+  
+  .submit-button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    min-height: 40px;
+    border-radius: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-actions {
+    margin-top: 20px;
+  }
+}
+
+/* Better touch interactions */
+@media (hover: none) and (pointer: coarse) {
+  .expand-button:hover,
+  .submit-button:hover {
+    transform: none;
+  }
+  
+  .expand-button:active,
+  .submit-button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  .dream-entry:hover {
+    transform: none;
+    box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
+  }
+  
+  /* Touch-friendly dropdown interactions */
+  .custom-select-button:hover {
+    transform: none;
+  }
+  
+  .custom-select-button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  .dropdown-option:hover {
+    background: rgba(106, 90, 205, 0.2);
+  }
+  
+  .dropdown-option:active {
+    background: rgba(106, 90, 205, 0.4);
+    transform: scale(0.98);
+    transition: all 0.1s ease;
+  }
+}
+
+/* Enhanced focus styles for mobile accessibility */
+@media (max-width: 768px) {
+  .dream-title-input:focus,
+  .dream-content-input:focus,
+  .mood-select:focus,
+  .tags-input:focus {
+    border-width: 3px;
+    padding: 9px 12px;
+  }
+  
+  .dream-content-input:focus {
+    min-height: 97px;
+  }
+  
+  /* Custom dropdown focus styles */
+  .custom-select-button:focus {
+    border-width: 3px;
+    padding: 9px 12px;
+    box-shadow: 0 0 20px rgba(147, 112, 219, 0.4);
+  }
+  
+  .dropdown-option:focus {
+    outline: 2px solid #9370db;
+    outline-offset: 2px;
+    background: rgba(106, 90, 205, 0.3);
+  }
+}
+
+/* Improved performance on mobile - temporarily removed transforms to fix stacking context */
+.dream-form {
+  /* transform: translateZ(0); */
+  /* -webkit-transform: translateZ(0); */
+}
+
+/* Additional mobile-specific dropdown improvements */
+@media (max-width: 768px) {
+  .custom-dropdown {
+    /* Ensure dropdown is above other elements on mobile */
+    z-index: 9999;
+    /* Better backdrop blur for mobile */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    /* Enhanced shadow for better visibility */
+    box-shadow: 0 15px 50px rgba(106, 90, 205, 0.4);
+  }
+  
+  /* Prevent text selection on dropdown options for better touch UX */
+  .dropdown-option {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Better tap highlight */
+    -webkit-tap-highlight-color: rgba(106, 90, 205, 0.3);
+  }
+  
+  /* Larger touch targets on very small screens */
+  @media (max-width: 350px) {
+    .dropdown-option {
+      padding: 16px 12px;
+      min-height: 48px;
+    }
+    
+    .custom-select-button {
+      min-height: 48px;
+      padding: 12px;
+    }
+  }
+}
+
+/* Additional mobile input optimizations */
+@media (max-width: 768px) {
+  /* Optimize form inputs for mobile scrolling performance */
+  .dream-title-input:focus,
+  .dream-content-input:focus,
+  .tags-input:focus {
+    /* Reduce expensive box-shadow on mobile */
+    box-shadow: 0 0 10px rgba(147, 112, 219, 0.2);
+    /* Prevent layout thrashing */
+    transform: translateZ(0);
+    will-change: auto;
+  }
+  
+  /* Disable animations during input focus to improve performance */
+  .dream-title-input,
+  .dream-content-input,
+  .tags-input {
+    transition: border-color 0.2s ease;
+    /* Force hardware acceleration */
+    transform: translate3d(0, 0, 0);
+    /* Prevent scrolling issues with virtual keyboard */
+    -webkit-appearance: none;
+  }
+  
+  /* Optimize textarea specifically for mobile */
+  .dream-content-input {
+    /* Prevent bounce scrolling within textarea */
+    overscroll-behavior: contain;
+    /* Improve touch scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent zoom on input focus (iOS Safari) */
+    font-size: 16px;
+  }
+  
+  /* Reduce motion for better performance */
+  @media (prefers-reduced-motion: reduce) {
+    .dream-form {
+      animation: none;
+    }
+    
+    .dream-title-input,
+    .dream-content-input,
+    .tags-input {
+      transition: none;
+    }
   }
 }
