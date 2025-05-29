@@ -1,0 +1,382 @@
+/* Dream Timeline Component */
+.dream-timeline {
+  margin-top: 40px;
+}
+
+.timeline-title {
+  text-align: center;
+  font-size: 2.5rem;
+  background: linear-gradient(45deg, #e6e6fa, #dda0dd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 40px;
+  text-shadow: 0 0 20px rgba(221, 160, 221, 0.3);
+}
+
+.timeline-empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state {
+  background: rgba(25, 25, 46, 0.6);
+  border-radius: 20px;
+  padding: 40px;
+  border: 2px dashed rgba(177, 156, 217, 0.3);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.empty-state h3 {
+  color: #b19cd9;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.empty-state p {
+  color: #9a8bb3;
+  font-size: 1.1rem;
+}
+
+.timeline-container {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #6a5acd, #9370db, #dda0dd);
+  border-radius: 1px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 40px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.timeline-item:nth-child(odd) .dream-card {
+  animation-delay: 0.1s;
+}
+
+.timeline-item:nth-child(even) .dream-card {
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -22px;
+  top: 20px;
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #9370db, #dda0dd);
+  border-radius: 50%;
+  border: 3px solid rgba(15, 15, 35, 0.8);
+  box-shadow: 0 0 15px rgba(147, 112, 219, 0.5);
+  z-index: 2;
+}
+
+.dream-card {
+  background: rgba(25, 25, 46, 0.9);
+  border-radius: 20px;
+  padding: 25px;
+  border: 1px solid rgba(177, 156, 217, 0.2);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
+  transition: all 0.3s ease;
+  margin-left: 20px;
+}
+
+.dream-card:hover {
+  border-color: rgba(177, 156, 217, 0.4);
+  box-shadow: 0 12px 40px rgba(106, 90, 205, 0.2);
+  transform: translateY(-5px);
+}
+
+.dream-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.dream-title {
+  color: #e6e6fa;
+  font-size: 1.4rem;
+  margin: 0;
+  flex: 1;
+  margin-right: 15px;
+}
+
+.dream-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.analyze-button,
+.edit-button,
+.delete-button {
+  background: rgba(177, 156, 217, 0.2);
+  border: none;
+  border-radius: 8px;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.analyze-button:hover {
+  background: rgba(106, 90, 205, 0.3);
+  transform: scale(1.1);
+}
+
+.edit-button:hover {
+  background: rgba(255, 215, 0, 0.3);
+  transform: scale(1.1);
+}
+
+.delete-button:hover {
+  background: rgba(220, 20, 60, 0.3);
+  transform: scale(1.1);
+}
+
+.dream-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  color: #b19cd9;
+}
+
+.dream-mood {
+  font-size: 1.2rem;
+}
+
+.dream-date {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.dream-content {
+  color: #d8d8f5;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.dream-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  background: rgba(106, 90, 205, 0.3);
+  color: #b19cd9;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(106, 90, 205, 0.4);
+}
+
+.dream-updated {
+  font-size: 0.8rem;
+  color: #9a8bb3;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+/* Edit Form Styles */
+.edit-form {
+  animation: slideIn 0.3s ease-out;
+}
+
+.edit-title-input,
+.edit-content-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid rgba(177, 156, 217, 0.3);
+  border-radius: 10px;
+  background: rgba(15, 15, 35, 0.6);
+  color: #e6e6fa;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.edit-title-input {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.edit-content-input {
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.edit-title-input:focus,
+.edit-content-input:focus {
+  outline: none;
+  border-color: #9370db;
+  box-shadow: 0 0 15px rgba(147, 112, 219, 0.3);
+}
+
+.edit-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.edit-mood-select {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid rgba(177, 156, 217, 0.3);
+  border-radius: 8px;
+  background: rgba(15, 15, 35, 0.6);
+  color: #e6e6fa;
+  cursor: pointer;
+}
+
+.edit-tags-input {
+  flex: 2;
+  padding: 10px 12px;
+  border: 2px solid rgba(177, 156, 217, 0.3);
+  border-radius: 8px;
+  background: rgba(15, 15, 35, 0.6);
+  color: #e6e6fa;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.save-button,
+.cancel-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.save-button {
+  background: linear-gradient(135deg, #32cd32, #00fa9a);
+  color: white;
+}
+
+.cancel-button {
+  background: rgba(220, 20, 60, 0.7);
+  color: white;
+}
+
+.save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(50, 205, 50, 0.4);
+}
+
+.cancel-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .timeline-title {
+    font-size: 2rem;
+  }
+  
+  .timeline-container {
+    padding-left: 25px;
+  }
+  
+  .timeline-marker {
+    left: -18px;
+    width: 12px;
+    height: 12px;
+  }
+  
+  .dream-card {
+    padding: 20px;
+    margin-left: 15px;
+  }
+  
+  .dream-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .dream-title {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .edit-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .edit-actions {
+    justify-content: stretch;
+  }
+  
+  .save-button,
+  .cancel-button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-container::before {
+    left: 12px;
+  }
+  
+  .timeline-marker {
+    left: -15px;
+    width: 10px;
+    height: 10px;
+  }
+  
+  .dream-card {
+    margin-left: 10px;
+    padding: 15px;
+  }
+  
+  .dream-title {
+    font-size: 1.2rem;
+  }
+  
+  .dream-actions {
+    flex-wrap: wrap;
+  }
+}

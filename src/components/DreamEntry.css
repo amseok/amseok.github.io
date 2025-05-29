@@ -1,0 +1,195 @@
+/* Dream Entry Component */
+.dream-entry {
+  background: rgba(25, 25, 46, 0.8);
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(177, 156, 217, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
+  transition: all 0.3s ease;
+}
+
+.dream-entry:hover {
+  border-color: rgba(177, 156, 217, 0.4);
+  box-shadow: 0 12px 40px rgba(106, 90, 205, 0.2);
+}
+
+.expand-button {
+  background: linear-gradient(135deg, #6a5acd, #9370db);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3);
+}
+
+.expand-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(106, 90, 205, 0.4);
+  background: linear-gradient(135deg, #7b68ee, #a569bd);
+}
+
+.plus-icon {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.dream-form {
+  margin-top: 25px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.dream-title-input {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid rgba(177, 156, 217, 0.3);
+  border-radius: 15px;
+  background: rgba(15, 15, 35, 0.6);
+  color: #e6e6fa;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.dream-title-input:focus {
+  outline: none;
+  border-color: #9370db;
+  box-shadow: 0 0 20px rgba(147, 112, 219, 0.3);
+  background: rgba(15, 15, 35, 0.8);
+}
+
+.dream-content-input {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid rgba(177, 156, 217, 0.3);
+  border-radius: 15px;
+  background: rgba(15, 15, 35, 0.6);
+  color: #e6e6fa;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.dream-content-input:focus {
+  outline: none;
+  border-color: #9370db;
+  box-shadow: 0 0 20px rgba(147, 112, 219, 0.3);
+  background: rgba(15, 15, 35, 0.8);
+}
+
+.mood-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #b19cd9;
+  font-weight: 500;
+}
+
+.mood-select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid rgba(177, 156, 217, 0.3);
+  border-radius: 10px;
+  background: rgba(15, 15, 35, 0.6);
+  color: #e6e6fa;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mood-select:focus {
+  outline: none;
+  border-color: #9370db;
+  box-shadow: 0 0 15px rgba(147, 112, 219, 0.3);
+}
+
+.tags-input {
+  width: 100%;
+  padding: 12px 20px;
+  border: 2px solid rgba(177, 156, 217, 0.3);
+  border-radius: 10px;
+  background: rgba(15, 15, 35, 0.6);
+  color: #e6e6fa;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.tags-input:focus {
+  outline: none;
+  border-color: #9370db;
+  box-shadow: 0 0 15px rgba(147, 112, 219, 0.3);
+}
+
+.form-actions {
+  margin-top: 25px;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, #32cd32, #00fa9a);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
+  width: 100%;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(50, 205, 50, 0.4);
+  background: linear-gradient(135deg, #3cb371, #00ff7f);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dream-entry {
+    padding: 20px;
+    margin-bottom: 25px;
+  }
+  
+  .expand-button {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+  
+  .dream-title-input {
+    font-size: 1.1rem;
+    padding: 12px 15px;
+  }
+  
+  .dream-content-input {
+    padding: 12px 15px;
+    min-height: 100px;
+  }
+}
