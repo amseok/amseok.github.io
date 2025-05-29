@@ -1,6 +1,7 @@
 {
-  "name": "DreamJournal",
-  "short_name": "Dreamer",
+  "name": "DreamJournal - Dream Analysis & Journal",
+  "short_name": "DreamJournal",
+  "description": "A beautiful dream journal with AI-powered dream analysis and interpretation",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -13,9 +14,19 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#6a5acd",
+  "background_color": "#0f0f23",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "start_url": "/",
+  "scope": "/",
+  "categories": ["lifestyle", "productivity", "health"],
+  "lang": "en"
 }
