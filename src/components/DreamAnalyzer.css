@@ -28,9 +28,9 @@
   background: linear-gradient(135deg, rgba(25, 25, 46, 0.95), rgba(40, 40, 70, 0.95));
   border-radius: 25px;
   border: 2px solid rgba(177, 156, 217, 0.3);
-  max-width: 800px;
+  max-width: 1000px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 95vh;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(106, 90, 205, 0.3);
   animation: slideInUp 0.4s ease-out;
@@ -320,6 +320,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .rethink-button-small {
@@ -335,6 +336,8 @@
   align-items: center;
   gap: 5px;
   white-space: nowrap;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .rethink-button-small:hover {
@@ -361,6 +364,8 @@
   align-items: center;
   gap: 5px;
   white-space: nowrap;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .copy-button:hover {
@@ -571,16 +576,22 @@
 /* Mobile Responsive Design */
 @media (max-width: 768px) {
   .dream-analyzer-overlay {
-    padding: 10px;
+    padding: 5px;
     align-items: flex-start;
-    padding-top: 20px;
+    padding-top: 5px;
+    /* Prevent horizontal scrolling */
+    overflow-x: hidden;
   }
   
   .dream-analyzer {
     width: 100%;
-    max-height: 95vh;
+    max-width: 100%;
+    max-height: 98vh;
     margin: 0;
     border-radius: 20px;
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
   
   .analyzer-header {
@@ -588,11 +599,17 @@
     flex-direction: column;
     gap: 15px;
     text-align: center;
+    /* Prevent content overflow */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   
   .analyzer-header h2 {
     font-size: 1.5rem;
     margin: 0;
+    /* Prevent text overflow */
+    word-wrap: break-word;
+    max-width: 100%;
   }
   
   .close-button {
@@ -604,28 +621,92 @@
   
   .dream-summary {
     padding: 20px;
+    /* Prevent content overflow */
+    overflow-x: hidden;
+    word-wrap: break-word;
   }
   
   .dream-summary h3 {
     font-size: 1.2rem;
+    word-wrap: break-word;
+  }
+  
+  .dream-preview {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    /* Prevent long words from causing horizontal scroll */
+    word-break: break-word;
   }
   
   .api-key-section {
     padding: 20px;
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
   }
   
   .api-key-input-group {
     flex-direction: column;
     gap: 15px;
+    /* Ensure inputs don't overflow */
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .api-key-input {
+    width: 100%;
+    box-sizing: border-box;
+    /* Prevent input overflow */
+    min-width: 0;
   }
   
   .save-key-button {
     width: 100%;
     padding: 15px 20px;
+    box-sizing: border-box;
   }
   
   .analysis-section {
     padding: 20px;
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
+  }
+
+  /* Mobile-specific button layout fixes */
+  .analysis-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .analysis-header h4 {
+    margin: 0;
+    width: 100%;
+  }
+
+  .analysis-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .rethink-button-small,
+  .copy-button {
+    flex: 1;
+    min-width: 120px;
+    max-width: none;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    justify-content: center;
+  }
+
+  /* Make saved indicator responsive */
+  .saved-indicator {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+    margin-top: 8px;
+    display: block;
+    width: fit-content;
   }
   
   .analyze-dream-button,
@@ -660,13 +741,13 @@
 
 @media (max-width: 480px) {
   .dream-analyzer-overlay {
-    padding: 5px;
-    padding-top: 10px;
+    padding: 2px;
+    padding-top: 2px;
   }
   
   .dream-analyzer {
     border-radius: 15px;
-    max-height: 98vh;
+    max-height: 99vh;
   }
   
   .analyzer-header {
@@ -682,9 +763,34 @@
   .analysis-section {
     padding: 15px;
   }
-  
-  .analyzer-footer {
+    .analyzer-footer {
     padding: 12px 15px;
+  }
+
+  /* Stack buttons vertically on very small screens */
+  .analysis-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rethink-button-small,
+  .copy-button {
+    width: 100%;
+    min-width: auto;
+    max-width: none;
+  }
+
+  /* Adjust analysis header for very small screens */
+  .analysis-header h4 {
+    font-size: 1.1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .saved-indicator {
+    margin-top: 5px;
+    margin-left: 0;
   }
   
   /* Markdown responsive adjustments */
@@ -737,5 +843,131 @@
   .toggle-key-button:active {
     transform: scale(0.95);
     transition: transform 0.1s ease;
+  }
+}
+
+/* SMART Mobile Performance Optimizations */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  /* Hardware acceleration for smooth interactions */
+  .dream-analyzer-overlay,
+  .dream-analyzer,
+  .analysis-result,
+  .toggle-key-button,
+  .analyze-dream-button,
+  .rethink-button {
+    /* Hardware acceleration */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    /* Disable animations */
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Simplify overlay but keep it visible */
+  .dream-analyzer-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+
+  /* Simplify main analyzer container but keep it visible */
+  .dream-analyzer {
+    /* Keep container visible with good contrast */
+    background: rgba(25, 25, 46, 0.98) !important;
+    box-shadow: 0 8px 32px rgba(106, 90, 205, 0.2) !important;
+  }
+
+  /* Simplify toggle key button but keep it functional */
+  .toggle-key-button {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(177, 156, 217, 0.2) !important;
+    border: 1px solid rgba(177, 156, 217, 0.4) !important;
+    box-shadow: 0 2px 8px rgba(177, 156, 217, 0.1) !important;
+    text-shadow: none !important;
+  }
+  /* Simplify analyze button but keep it visible with feedback */
+  .analyze-dream-button {
+    background: linear-gradient(135deg, #6a5acd, #9370db) !important;
+    box-shadow: 0 4px 15px rgba(106, 90, 205, 0.2) !important;
+    text-shadow: none !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .analyze-dream-button:disabled {
+    background: rgba(106, 90, 205, 0.3) !important;
+  }
+
+  /* Remove hover effects but add active feedback */
+  .toggle-key-button:hover,
+  .analyze-dream-button:hover:not(:disabled),
+  .rethink-button:hover {
+    transform: none !important;
+    box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3) !important;
+  }
+
+  /* Enhanced active states for mobile feedback */
+  .toggle-key-button:active,
+  .analyze-dream-button:active:not(:disabled) {
+    transform: scale(0.98) !important;
+    opacity: 0.8 !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  .rethink-button:active,
+  .copy-button:active {
+    transform: scale(0.95) !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  /* Keep analysis result visible */
+  .analysis-result {
+    background: rgba(15, 15, 35, 0.95) !important;
+    box-shadow: 0 4px 16px rgba(106, 90, 205, 0.1) !important;
+  }
+
+  /* Simplify action buttons but keep them functional */
+  .copy-button,
+  .rethink-button {
+    box-shadow: 0 2px 8px rgba(106, 90, 205, 0.1) !important;
+    text-shadow: none !important;
+  }
+}
+
+/* Additional optimizations for very small screens */
+@media (max-width: 480px) {
+  /* Simpler analyzer styling but keep it visible */
+  .dream-analyzer {
+    box-shadow: 0 4px 16px rgba(106, 90, 205, 0.15) !important;
+    border-radius: 16px !important;
+    background: rgba(31, 31, 58, 0.98) !important;
+  }
+
+  /* Keep buttons functional but simpler */
+  .toggle-key-button,
+  .analyze-dream-button,
+  .copy-button,
+  .rethink-button {
+    box-shadow: 0 2px 8px rgba(106, 90, 205, 0.1) !important;
+    text-shadow: none !important;
+    border-radius: 8px !important;
+  }
+
+  /* Keep analysis result visible */
+  .analysis-result {
+    background: rgba(26, 26, 46, 0.95) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(106, 90, 205, 0.1) !important;
+  }
+
+  /* Keep loading spinner visible but simplified */
+  .loading-spinner {
+    /* Keep basic rotation but slower */
+    animation: spin 2s linear infinite !important;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 }

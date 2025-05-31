@@ -61,16 +61,17 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
 - **Tags:** ${dream.tags ? dream.tags.join(", ") : "None"}`
                         }
                     ],
-                    max_tokens: 600,
-                    temperature: 0.7                })
+                    max_tokens: 400,
+                    temperature: 0.7
+                })
             })
 
             const data = await response.json()
-            
+
             if (data.error) {
                 throw new Error(data.error.message)
             }
-            
+
             setAnalysis(data.choices[0].message.content)
 
             // Save analysis to dream object
@@ -84,7 +85,8 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
 
             // Don't save error messages to the dream
         } finally {
-            setLoading(false)        }
+            setLoading(false)
+        }
     }
 
     const rethinkDream = () => {
@@ -153,32 +155,32 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
                         </p>
                     </div>) : (
                     <div className="analysis-section">
-                          {analysis && (
+                        {analysis && (
                             <div className="analysis-result">                                <div className="analysis-header">
-                                    <h4>
-                                        Dream Interpretation:
-                                        {dream.analysis && analysis === dream.analysis && (
-                                            <span className="saved-indicator">💾 Saved</span>
-                                        )}
-                                    </h4>
-                                    <div className="analysis-actions">
-                                        <button 
-                                            onClick={rethinkDream}
-                                            disabled={loading}
-                                            className="rethink-button-small"
-                                            title="Generate new analysis"
-                                        >
-                                            {loading ? '🔄' : '🔄 Rethink'}
-                                        </button>
-                                        <button 
-                                            onClick={copyAnalysis}
-                                            className={`copy-button ${copySuccess ? 'copy-success' : ''}`}
-                                            title="Copy analysis to clipboard"
-                                        >
-                                            {copySuccess ? '✓ Copied!' : '📋 Copy'}
-                                        </button>
-                                    </div>
+                                <h4>
+                                    Dream Interpretation:
+                                    {dream.analysis && analysis === dream.analysis && (
+                                        <span className="saved-indicator">💾 Saved</span>
+                                    )}
+                                </h4>
+                                <div className="analysis-actions">
+                                    <button
+                                        onClick={rethinkDream}
+                                        disabled={loading}
+                                        className="rethink-button-small"
+                                        title="Generate new analysis"
+                                    >
+                                        {loading ? '🔄' : '🔄 Rethink'}
+                                    </button>
+                                    <button
+                                        onClick={copyAnalysis}
+                                        className={`copy-button ${copySuccess ? 'copy-success' : ''}`}
+                                        title="Copy analysis to clipboard"
+                                    >
+                                        {copySuccess ? '✓ Copied!' : '📋 Copy'}
+                                    </button>
                                 </div>
+                            </div>
                                 <div className="analysis-content">
                                     <ReactMarkdown
                                         components={{
@@ -199,20 +201,21 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
                                     </ReactMarkdown>
                                 </div>
                             </div>
-                        )}                        <div className="analysis-buttons">
+                        )}
+                        <div className="analysis-buttons">
                             {!analysis && (
                                 <button
                                     onClick={analyzeDream}
                                     disabled={loading || dream.content.trim().split(/\s+/).filter(word => word.length > 0).length < 10}
                                     className="analyze-dream-button"
-                                    title={dream.content.trim().split(/\s+/).filter(word => word.length > 0).length < 10 ? 
-                                        'Please write at least 10 words about your dream' : 
+                                    title={dream.content.trim().split(/\s+/).filter(word => word.length > 0).length < 10 ?
+                                        'Please write at least 10 words about your dream' :
                                         'Analyze your dream with AI'}
                                 >
-                                    {loading ? '🔄 Analyzing...' : 
-                                     dream.content.trim().split(/\s+/).filter(word => word.length > 0).length < 10 ? 
-                                     '✨ Write more details (10+ words)' : 
-                                     '✨ Analyze Dream'}
+                                    {loading ? '🔄 Analyzing...' :
+                                        dream.content.trim().split(/\s+/).filter(word => word.length > 0).length < 10 ?
+                                            '✨ Write more details (10+ words)' :
+                                            '✨ Analyze Dream'}
                                 </button>
                             )}
                         </div>

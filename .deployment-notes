@@ -1,0 +1,23 @@
+# Deployment Notes
+# This file contains important deployment information for the dream journal PWA
+
+## Service Worker Requirements for GitHub Pages
+
+GitHub Pages serves static files correctly for PWA deployment. The service worker (sw.js) 
+will be served with the correct MIME type and headers automatically.
+
+## Asset Structure
+- All chunked assets are in /assets/ directory
+- Service worker is at root level (/sw.js)
+- Manifest is properly linked in index.html
+- All PWA requirements are met for GitHub Pages
+
+## Cache Strategy
+- Precache: 22 entries totaling ~6MB
+- Runtime cache: Google Fonts and other external resources
+- Update strategy: Automatic updates on new deployments
+
+## Performance Metrics Expected
+- First Load: ~380KB (compressed)
+- Repeat visits: ~0KB (cached)
+- Offline: Full functionality available

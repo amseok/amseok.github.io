@@ -16,64 +16,83 @@ html {
 #root {
   min-height: 100vh;
   min-height: 100dvh;
+  /* Root background - no attachment issues */
   background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  background-attachment: scroll; /* Prevent fixed background issues */
 }
 
 body {
-  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  /* Remove duplicate background - let #root handle it */
   min-height: 100vh;
+  min-height: 100dvh;
   color: #e6e6fa;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   overflow-x: hidden;
   /* Prevent overscroll on mobile */
   overscroll-behavior: none;
   /* Prevent elastic scrolling on iOS */
-  -webkit-overflow-scrolling: auto;
-  /* Ensure full height */
-  height: 100%;
+  -webkit-overflow-scrolling: touch;
+  /* Fix for proper mobile scrolling */
+  margin: 0;
+  padding: 0;
 }
 
 .app {
   min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  /* Ensure app fills full height and prevents overscroll */
-  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-  background-attachment: fixed;
+  /* Remove background from app - let parent handle it */
+  /* This prevents the "moving to bottom" effect */
 }
 
 /* Animated Stars Background */
-.stars, .stars2, .stars3 {
+.stars,
+.stars2,
+.stars3 {
   position: fixed;
-  top: -10px;
-  left: -400px;
-  width: calc(100vw + 800px);
-  height: calc(100vh + 20px);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: -1;
   pointer-events: none;
   background-position: center;
+  /* Prevent stars from affecting layout */
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .stars {
-  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="40" cy="40" r="1" fill="%23ffffff" opacity="0.6"/><circle cx="160" cy="80" r="0.8" fill="%23ffffff" opacity="0.4"/><circle cx="120" cy="160" r="1.2" fill="%23ffffff" opacity="0.7"/></svg>') repeat;
+  background: transparent
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="40" cy="40" r="1" fill="%23ffffff" opacity="0.6"/><circle cx="160" cy="80" r="0.8" fill="%23ffffff" opacity="0.4"/><circle cx="120" cy="160" r="1.2" fill="%23ffffff" opacity="0.7"/></svg>')
+    repeat;
   animation: moveStars 60s linear infinite;
 }
 
 .stars2 {
-  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><circle cx="30" cy="70" r="0.6" fill="%23b19cd9" opacity="0.4"/><circle cx="130" cy="30" r="0.9" fill="%23b19cd9" opacity="0.5"/></svg>') repeat;
+  background: transparent
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><circle cx="30" cy="70" r="0.6" fill="%23b19cd9" opacity="0.4"/><circle cx="130" cy="30" r="0.9" fill="%23b19cd9" opacity="0.5"/></svg>')
+    repeat;
   animation: moveStars 45s linear infinite reverse;
 }
 
 .stars3 {
-  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240"><circle cx="80" cy="60" r="0.5" fill="%236a5acd" opacity="0.3"/><circle cx="180" cy="140" r="0.8" fill="%236a5acd" opacity="0.4"/></svg>') repeat;
+  background: transparent
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240"><circle cx="80" cy="60" r="0.5" fill="%236a5acd" opacity="0.3"/><circle cx="180" cy="140" r="0.8" fill="%236a5acd" opacity="0.4"/></svg>')
+    repeat;
   animation: moveStars 75s linear infinite;
 }
 
 @keyframes moveStars {
-  from { transform: translateY(0px); }
-  to { transform: translateY(-200px); }
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-200px);
+  }
 }
 
 /* Header */
@@ -100,7 +119,8 @@ body {
   animation: float 3s ease-in-out infinite;
   font-size: 1.2em;
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 25px rgba(218, 112, 214, 0.4);
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6),
+    0 0 25px rgba(218, 112, 214, 0.4);
   opacity: 0.9;
   transition: all 0.3s ease;
 }
@@ -108,7 +128,8 @@ body {
 .dream-icon:hover {
   transform: scale(1.2) translateY(-5px);
   filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1));
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 35px rgba(218, 112, 214, 0.6);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 35px rgba(218, 112, 214, 0.6);
 }
 
 .dream-icon:nth-child(3) {
@@ -116,13 +137,23 @@ body {
 }
 
 @keyframes titleGlow {
-  0% { text-shadow: 0 0 30px rgba(218, 112, 214, 0.3); }
-  100% { text-shadow: 0 0 50px rgba(218, 112, 214, 0.8), 0 0 70px rgba(186, 85, 211, 0.4); }
+  0% {
+    text-shadow: 0 0 30px rgba(218, 112, 214, 0.3);
+  }
+  100% {
+    text-shadow: 0 0 50px rgba(218, 112, 214, 0.8),
+      0 0 70px rgba(186, 85, 211, 0.4);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .subtitle {
@@ -147,26 +178,26 @@ body {
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
   }
-  
+
   .header {
     margin-bottom: 30px;
     padding: 30px 15px;
   }
-  
+
   .title {
     font-size: 2.5rem;
     margin-bottom: 12px;
   }
-  
+
   .dream-icon {
     margin: 0 8px;
     font-size: 1.1em;
   }
-  
+
   .subtitle {
     font-size: 1.1rem;
   }
-  
+
   .main-content {
     gap: 30px;
   }
@@ -174,121 +205,261 @@ body {
 
 /* Optimize animations for mobile performance - Tablets first */
 @media (max-width: 768px) and (min-width: 481px) {
-  /* Reset star positioning for tablets */
-  .stars, .stars2, .stars3 {
-    left: -50px;
-    width: calc(100vw + 100px);
-  }
-  
-  /* Slower stars for tablets */
+  /* Slower stars for tablets - no positioning changes needed */
   .stars {
     animation-duration: 90s;
   }
-  
+
   .stars2 {
     animation-duration: 60s;
   }
-  
+
   .stars3 {
     animation-duration: 120s;
   }
-  
+
   /* Slower dream icon animation */
   .dream-icon {
     animation-duration: 5s;
   }
-  
+
   /* Slower title glow */
   .title {
     animation-duration: 6s;
   }
-  
+
   @keyframes titleGlow {
-    0% { text-shadow: 0 0 20px rgba(218, 112, 214, 0.3); }
-    100% { text-shadow: 0 0 30px rgba(218, 112, 214, 0.6), 0 0 40px rgba(186, 85, 211, 0.3); }
+    0% {
+      text-shadow: 0 0 20px rgba(218, 112, 214, 0.3);
+    }
+    100% {
+      text-shadow: 0 0 30px rgba(218, 112, 214, 0.6),
+        0 0 40px rgba(186, 85, 211, 0.3);
+    }
   }
-  
+
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
   }
 }
 
+/* SMART MOBILE OPTIMIZATIONS - Small screens */
 @media (max-width: 480px) {
-  .app {
-    padding: 10px;
-    /* Ensure no overscroll on small screens */
-    min-height: 100vh;
-    min-height: 100dvh;
-    overscroll-behavior: none;
+  /* Performance optimizations for small screens */
+  * {
+    /* Force hardware acceleration everywhere */
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
   }
-  
+
+  /* Simplified app container */
+  .app {
+    padding: 15px;
+    /* Simple solid background */
+    background: #1a1a2e !important;
+    /* Hardware acceleration for performance */
+    transform: translate3d(0, 0, 0);
+    will-change: auto !important;
+  }
+
+  /* Ultra-simple header */
   .header {
     margin-bottom: 25px;
     padding: 25px 10px;
+    /* Remove any remaining backgrounds */
+    background: none !important;
   }
-  
+
+  /* Mobile-optimized title - keep it beautiful and visible */
   .title {
     font-size: 2rem;
     margin-bottom: 10px;
     line-height: 1.2;
     word-spacing: 0.1em;
+    /* Fallback color first */
+    color: #e6e6fa !important;
+    /* Keep simple gradient for beauty but ensure visibility */
+    background: linear-gradient(45deg, #e6e6fa, #b19cd9) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    /* Remove expensive shadows and animations */
+    text-shadow: none !important;
+    animation: none !important;
   }
-  
+
+  /* Fallback for browsers that don't support background-clip: text */
+  @supports not (-webkit-background-clip: text) {
+    .title {
+      background: none !important;
+      color: #b19cd9 !important;
+      -webkit-text-fill-color: initial !important;
+    }
+  }
+
+  /* KEEP beautiful dream icon effects on mobile! ✨ */
   .dream-icon {
     margin: 0 6px;
-    font-size: 1em;
+    font-size: 1.6em;
+    /* Enhanced magical glow effects for mobile */
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8)) 
+            drop-shadow(0 0 20px rgba(255, 255, 255, 0.4)) !important;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8),
+      0 0 25px rgba(218, 112, 214, 0.6),
+      0 0 35px rgba(186, 85, 211, 0.4) !important;
+    /* Slower, battery-friendly animation */
+    animation: float 6s ease-in-out infinite !important;
+    /* Keep transitions for touch feedback */
+    transition: all 0.3s ease !important;
+    opacity: 0.95;
   }
-  
+
   .subtitle {
     font-size: 1rem;
     line-height: 1.4;
+    text-shadow: none !important;
   }
-  
+
   .main-content {
     gap: 25px;
   }
-  
-  /* Reset star positioning for mobile phones */
-  .stars, .stars2, .stars3 {
-    left: -10px !important;
-    width: calc(100vw + 20px) !important;
+
+  /* Force disable ALL animations and transitions */
+  * {
+    animation: none !important;
+    transition: none !important;
+    transform: translateZ(0) !important;
   }
-  
-  /* Slower stars for small screens */
-  .stars {
-    animation-duration: 120s !important;
+
+  /* Ensure proper touch targets */
+  button,
+  .button,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+    /* Remove any visual effects */
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
   }
-  
-  .stars2 {
-    animation-duration: 100s !important;
+}
+
+/* SMART Mobile Performance Optimizations */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  /* Root optimizations */
+  #root {
+    /* Simple solid background - no gradients */
+    background: #1a1a2e !important;
+    background-attachment: scroll;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
-  
-  .stars3 {
-    animation-duration: 200s !important;
+
+  body {
+    /* Prevent overscroll and layout shifts */
+    overscroll-behavior: none;
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* Simple background */
+    background: #1a1a2e !important;
   }
-  
-  /* Slower animations for small screens */
+
+  /* App container optimizations */
+  .app {
+    /* Hardware acceleration */
+    transform: translate3d(0, 0, 0);
+    will-change: scroll-position;
+    /* Optimize touch scrolling */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    /* Ensure proper height calculation */
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* Remove any remaining background */
+    background: none !important;
+  }
+
+
+  /* Optimize viewport units for mobile browsers */
+  html {
+    height: 100%;
+    height: 100dvh;
+    overflow-x: hidden;
+    /* Better scrolling */
+    scroll-behavior: auto !important;
+  }
+
+  /* Prevent zoom on input focus (iOS Safari) */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  /* Disable expensive animations but keep layout and dream icon magic */
+  *:not(.dream-icon) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.1s !important;
+    transition-delay: 0s !important;
+  }
+
+  /* Keep dream icon animations beautiful but optimized */
   .dream-icon {
     animation-duration: 6s !important;
+    transition-duration: 0.3s !important;
   }
+}
+
+/* Very small screens - further optimizations */
+@media (max-width: 480px) {
+
+  /* Optimize padding for small screens */
+  .app {
+    padding: 15px;
+  }
+
+  /* Ensure proper touch targets */
+  button,
+  .button,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Performance optimizations for low-end devices */
+@media (max-width: 768px) and (max-resolution: 192dpi) {
   
-  .title {
-    animation-duration: 8s !important;
+
+  /* Simplify gradients */
+  body,
+  #root,
+  .app {
+    background: #1a1a2e;
   }
 }
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
-  .stars, .stars2, .stars3 {
+  .stars,
+  .stars2,
+  .stars3 {
     animation: none;
     opacity: 0.3;
   }
-  
+
   .dream-icon {
     animation: none;
   }
-  
+
   .title {
     animation: none;
     text-shadow: 0 0 30px rgba(218, 112, 214, 0.5);
@@ -297,13 +468,26 @@ body {
 
 /* Enhanced touch interactions */
 @media (hover: none) and (pointer: coarse) {
+  /* Enhanced mobile hover state (for browsers that support it) */
   .dream-icon:hover {
-    transform: none;
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9)) 
+            drop-shadow(0 0 25px rgba(255, 255, 255, 0.5)) !important;
+    text-shadow: 0 0 18px rgba(255, 255, 255, 0.9),
+      0 0 30px rgba(218, 112, 214, 0.7),
+      0 0 40px rgba(186, 85, 211, 0.5) !important;
+    transform: scale(1.1) translateY(-2px) !important;
   }
-  
+
+  /* Beautiful touch feedback for dream icons */
   .dream-icon:active {
-    transform: scale(1.1);
-    transition: transform 0.1s ease;
+    transform: scale(1.2) translateY(-5px) !important;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1)) 
+            drop-shadow(0 0 30px rgba(255, 255, 255, 0.6))
+            drop-shadow(0 0 40px rgba(218, 112, 214, 0.4)) !important;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.9),
+      0 0 35px rgba(218, 112, 214, 0.7),
+      0 0 50px rgba(186, 85, 211, 0.5) !important;
+    transition: all 0.2s ease !important;
   }
 }
 
@@ -318,11 +502,11 @@ body {
     padding: 20px 15px;
     margin-bottom: 20px;
   }
-  
+
   .title {
     font-size: 2.2rem;
   }
-  
+
   .main-content {
     gap: 20px;
   }

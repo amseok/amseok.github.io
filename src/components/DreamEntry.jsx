@@ -22,62 +22,63 @@ function DreamEntry({ onAddDream }) {
         { value: 'sad', label: '😢 Sad' }
     ]
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsMoodDropdownOpen(false)
-      }
-    }
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsMoodDropdownOpen(false)
+            }
+        }
 
-    function handleEscape(event) {
-      if (event.key === 'Escape') {
-        setIsMoodDropdownOpen(false)
-      }
-    }
+        function handleEscape(event) {
+            if (event.key === 'Escape') {
+                setIsMoodDropdownOpen(false)
+            }
+        }
 
-    if (isMoodDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      document.addEventListener('touchstart', handleClickOutside)
-      document.addEventListener('keydown', handleEscape)
-    }
+        if (isMoodDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside)
+            document.addEventListener('touchstart', handleClickOutside)
+            document.addEventListener('keydown', handleEscape)
+        }
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('touchstart', handleClickOutside)
-      document.removeEventListener('keydown', handleEscape)
-    }  }, [isMoodDropdownOpen])
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+            document.removeEventListener('touchstart', handleClickOutside)
+            document.removeEventListener('keydown', handleEscape)
+        }
+    }, [isMoodDropdownOpen])
 
-  // Handle window resize and scroll to close dropdown
-  useEffect(() => {
-    const handleWindowEvents = () => {
-      if (isMoodDropdownOpen) {
-        setIsMoodDropdownOpen(false)
-      }
-    }
+    // Handle window resize and scroll to close dropdown
+    useEffect(() => {
+        const handleWindowEvents = () => {
+            if (isMoodDropdownOpen) {
+                setIsMoodDropdownOpen(false)
+            }
+        }
 
-    if (isMoodDropdownOpen) {
-      window.addEventListener('resize', handleWindowEvents)
-      window.addEventListener('scroll', handleWindowEvents)
-    }
+        if (isMoodDropdownOpen) {
+            window.addEventListener('resize', handleWindowEvents)
+            window.addEventListener('scroll', handleWindowEvents)
+        }
 
-    return () => {
-      window.removeEventListener('resize', handleWindowEvents)
-      window.removeEventListener('scroll', handleWindowEvents)
-    }
-  }, [isMoodDropdownOpen])
+        return () => {
+            window.removeEventListener('resize', handleWindowEvents)
+            window.removeEventListener('scroll', handleWindowEvents)
+        }
+    }, [isMoodDropdownOpen])
 
-  const toggleDropdown = () => {
-    if (!isMoodDropdownOpen && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect()
-      setDropdownPosition({
-        top: rect.bottom + window.scrollY + 5,
-        left: rect.left + window.scrollX,
-        width: rect.width
-      })
+    const toggleDropdown = () => {
+        if (!isMoodDropdownOpen && buttonRef.current) {
+            const rect = buttonRef.current.getBoundingClientRect()
+            setDropdownPosition({
+                top: rect.bottom + window.scrollY + 5,
+                left: rect.left + window.scrollX,
+                width: rect.width
+            })
+        }
+        setIsMoodDropdownOpen(!isMoodDropdownOpen)
     }
-    setIsMoodDropdownOpen(!isMoodDropdownOpen)
-  }
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -131,19 +132,20 @@ function DreamEntry({ onAddDream }) {
                     <div className="form-group">
                         <label className="mood-label">Dream Mood:</label>
                         <div className="custom-select-container" ref={dropdownRef}>                            <button
-                                type="button"
-                                ref={buttonRef}
-                                className="custom-select-button"
-                                onClick={toggleDropdown}
-                            >
-                                <span className="selected-mood">
-                                    {moodOptions.find(option => option.value === mood)?.label}
-                                </span>
-                                <span className={`dropdown-arrow ${isMoodDropdownOpen ? 'open' : ''}`}>
-                                    ▼
-                                </span>
-                            </button>                            {isMoodDropdownOpen && createPortal(
-                                <div 
+                            type="button"
+                            ref={buttonRef}
+                            className="custom-select-button"
+                            onClick={toggleDropdown}
+                        >
+                            <span className="selected-mood">
+                                {moodOptions.find(option => option.value === mood)?.label}
+                            </span>
+                            <span className={`dropdown-arrow ${isMoodDropdownOpen ? 'open' : ''}`}>
+                                ▼
+                            </span>
+                        </button>
+                            {isMoodDropdownOpen && createPortal(
+                                <div
                                     className="custom-dropdown-portal"
                                     style={{
                                         position: 'absolute',

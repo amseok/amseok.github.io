@@ -136,6 +136,7 @@
 }
 
 .analyze-button,
+.share-button,
 .edit-button,
 .delete-button {
   background: rgba(177, 156, 217, 0.2);
@@ -154,6 +155,22 @@
 .analyze-button:hover {
   background: rgba(106, 90, 205, 0.3);
   transform: scale(1.1);
+}
+
+.share-button:hover {
+  background: rgba(50, 205, 50, 0.3);
+  transform: scale(1.1);
+}
+
+.share-button.share-success {
+  background: rgba(50, 205, 50, 0.4);
+  animation: shareSuccess 0.5s ease-out;
+}
+
+@keyframes shareSuccess {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 .edit-button:hover {
@@ -309,6 +326,211 @@
   box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
 }
 
+/* Delete Confirmation Modal */
+.delete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.delete-modal {
+  background: linear-gradient(135deg, rgba(25, 25, 46, 0.95), rgba(35, 35, 60, 0.95));
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  {{/* overflow-y: auto; */}}
+  border: 2px solid rgba(177, 156, 217, 0.3);
+  box-shadow: 
+    0 20px 60px rgba(106, 90, 205, 0.3),
+    0 0 40px rgba(147, 112, 219, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: modalSlideIn 0.3s ease-out;
+  position: relative;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.delete-modal::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #6a5acd, #9370db, #dda0dd, #9370db, #6a5acd);
+  border-radius: 22px;
+  z-index: -1;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.delete-modal-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.delete-modal-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 15px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.delete-modal-header h3 {
+  color: #e6e6fa;
+  font-size: 1.8rem;
+  margin: 0;
+  background: linear-gradient(45deg, #e6e6fa, #dda0dd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 20px rgba(221, 160, 221, 0.3);
+}
+
+.delete-modal-content {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.delete-modal-content p {
+  color: #d8d8f5;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.delete-modal-content strong {
+  color: #b19cd9;
+  font-weight: 600;
+}
+
+.delete-warning {
+  color: #ff9999 !important;
+  font-size: 0.95rem !important;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.delete-modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.confirm-delete-button,
+.cancel-delete-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.button-icon {
+  font-size: 1.1rem;
+}
+
+.confirm-delete-button {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.confirm-delete-button:hover {
+  background: linear-gradient(135deg, #ff5252, #ff7575);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.cancel-delete-button {
+  background: linear-gradient(135deg, #6a5acd, #9370db);
+  color: white;
+  box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3);
+}
+
+.cancel-delete-button:hover {
+  background: linear-gradient(135deg, #5a4abd, #8260db);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(106, 90, 205, 0.4);
+}
+
+/* Share Success Message */
+.share-success {
+  background: rgba(50, 205, 50, 0.2);
+  color: #90ee90;
+  padding: 8px 15px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 10px;
+  border: 1px solid rgba(50, 205, 50, 0.3);
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .timeline-title {
@@ -352,14 +574,14 @@
     margin-bottom: 10px;
     font-size: 1.3rem;
   }
-  
-  .dream-actions {
+    .dream-actions {
     align-self: flex-end;
     flex-wrap: wrap;
     gap: 10px;
   }
   
   .analyze-button,
+  .share-button,
   .edit-button,
   .delete-button {
     width: 40px;
@@ -464,8 +686,8 @@
     width: 100%;
     justify-content: flex-end;
   }
-  
-  .analyze-button,
+    .analyze-button,
+  .share-button,
   .edit-button,
   .delete-button {
     width: 36px;
@@ -507,9 +729,201 @@
   }
 }
 
+/* SMART Mobile Performance Optimizations */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  /* Hardware acceleration for smooth scrolling */
+  .dream-timeline,
+  .timeline-container,
+  .timeline-item,
+  .dream-card {
+    /* Hardware acceleration */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    /* Disable animations */
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Simplify card backgrounds but keep them visible */
+  .dream-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    /* Ensure card is visible with good contrast */
+    background: rgba(25, 25, 46, 0.95) !important;
+    border: 1px solid rgba(177, 156, 217, 0.4) !important;
+    box-shadow: 0 4px 16px rgba(106, 90, 205, 0.1) !important;
+  }
+  /* Remove hover effects but keep card hover */
+  .dream-card:hover {
+    transform: none !important;
+    box-shadow: 0 4px 16px rgba(106, 90, 205, 0.1) !important;
+    background: rgba(25, 25, 46, 0.95) !important;
+  }
+
+  /* Keep button interactions for mobile feedback */
+  .analyze-button,
+  .share-button,
+  .edit-button,
+  .delete-button,
+  .save-button,
+  .cancel-button {
+    transition: all 0.2s ease !important;
+  }
+
+  /* Mobile-friendly button hover states */
+  .analyze-button:hover {
+    background: rgba(106, 90, 205, 0.3) !important;
+  }
+
+  .share-button:hover {
+    background: rgba(50, 205, 50, 0.3) !important;
+  }
+
+  .edit-button:hover {
+    background: rgba(255, 215, 0, 0.3) !important;
+  }
+
+  .delete-button:hover {
+    background: rgba(220, 20, 60, 0.3) !important;
+  }
+
+  .save-button:hover {
+    box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3) !important;
+  }
+
+  .cancel-button:hover {
+    box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3) !important;
+  }
+
+  /* Active/click animations for mobile feedback */
+  .analyze-button:active,
+  .share-button:active,
+  .edit-button:active,
+  .delete-button:active {
+    transform: scale(0.95) !important;
+    opacity: 0.8 !important;
+  }
+
+  .save-button:active,
+  .cancel-button:active {
+    transform: scale(0.98) translateY(1px) !important;
+  }
+
+  /* Simplify timeline markers but keep them visible */
+  .timeline-marker {
+    background: #9370db !important;
+    box-shadow: 0 0 10px rgba(147, 112, 219, 0.3) !important;
+  }
+
+  /* Keep timeline line visible */
+  .timeline-container::before {
+    background: linear-gradient(to bottom, #6a5acd, #9370db, #dda0dd) !important;
+  }
+
+  /* Disable empty state animation but keep it visible */
+  .empty-icon {
+    animation: none !important;
+  }
+
+  /* Disable card entrance animations */
+  .timeline-item {
+    animation: none !important;
+  }
+
+  /* Simplify delete modal */
+  .delete-modal-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+
+  .delete-modal {
+    animation: none !important;
+    transition: none !important;
+    /* Keep modal visible */
+    background: rgba(25, 25, 46, 0.98) !important;
+    box-shadow: 0 8px 32px rgba(106, 90, 205, 0.2) !important;
+  }
+
+  /* Remove modal border animation but keep border visible */
+  .delete-modal::before {
+    animation: none !important;
+    opacity: 0.7 !important;
+  }
+
+  /* Simplify modal icon animation */
+  .delete-modal-icon {
+    animation: none !important;
+  }
+
+  {{/*
+  
+  .analyze-button,
+  .share-button,
+  .edit-button,
+  .delete-button,
+  .save-button,
+  .cancel-button {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .analyze-button:hover,
+  .share-button:hover,
+  .edit-button:hover,
+  .delete-button:hover,
+  .save-button:hover,
+  .cancel-button:hover {
+    transform: none !important;
+  }
+
+  .analyze-button:active,
+  .share-button:active,
+  .edit-button:active,
+  .delete-button:active {
+    opacity: 0.8 !important;
+  }
+  */}}
+}
+
+/* Additional optimizations for very small screens */
+@media (max-width: 480px) {
+  /* Simpler card styling but keep it visible */
+  .dream-card {
+    box-shadow: 0 2px 8px rgba(106, 90, 205, 0.08) !important;
+    border-radius: 12px !important;
+    background: rgba(31, 31, 58, 0.95) !important;
+    border: 1px solid rgba(177, 156, 217, 0.4) !important;
+  }
+
+  /* Simplify modal but keep it visible */
+  .delete-modal {
+    box-shadow: 0 4px 16px rgba(106, 90, 205, 0.15) !important;
+    background: rgba(31, 31, 58, 0.98) !important;
+  }
+
+  /* Keep decorative elements but simplified */
+  .delete-modal::before {
+    opacity: 0.5 !important;
+  }
+
+  /* Simplify timeline elements */
+  .timeline-container::before {
+    background: #6a5acd !important;
+  }
+
+  .timeline-marker {
+    background: #9370db !important;
+    box-shadow: 0 0 8px rgba(147, 112, 219, 0.2) !important;
+  }
+
+}
+
 /* Better touch interactions */
 @media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
   .analyze-button:hover,
+  .share-button:hover,
   .edit-button:hover,
   .delete-button:hover,
   .save-button:hover,
@@ -517,7 +931,9 @@
     transform: none;
   }
   
+  /* Enhanced active states for touch feedback */
   .analyze-button:active,
+  .share-button:active,
   .edit-button:active,
   .delete-button:active {
     transform: scale(0.9);
@@ -530,6 +946,7 @@
     transition: transform 0.1s ease;
   }
   
+  /* Keep dream card simple on touch */
   .dream-card:hover {
     transform: none;
     box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);

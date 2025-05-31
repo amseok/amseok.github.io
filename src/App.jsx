@@ -3,7 +3,9 @@ import './App.css'
 import DreamAnalyzer from './components/DreamAnalyzer'
 import DreamEntry from './components/DreamEntry'
 import DreamTimeline from './components/DreamTimeline'
+import SharedDream from './components/SharedDream'
 import DreamStorage from './utils/DreamStorage'
+import ShareUtils from './utils/ShareUtils'
 
 function App() {
   const [dreams, setDreams] = useState([])
@@ -11,6 +13,29 @@ function App() {
   const [showAnalyzer, setShowAnalyzer] = useState(false)
   const [storage] = useState(() => new DreamStorage())
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isSharedView, setIsSharedView] = useState(false)
+
+  // Check if we're in shared view mode
+  useEffect(() => {
+    const checkSharedView = () => {
+      setIsSharedView(ShareUtils.isSharedUrl())
+    }
+    
+    checkSharedView()
+    
+    // Listen for navigation changes
+    const handleNavigationChange = () => {
+      checkSharedView()
+    }
+    
+    window.addEventListener('navigationChange', handleNavigationChange)
+    window.addEventListener('popstate', checkSharedView)
+    
+    return () => {
+      window.removeEventListener('navigationChange', handleNavigationChange)
+      window.removeEventListener('popstate', checkSharedView)
+    }
+  }, [])
 
   // Load dreams on component mount with enhanced storage
   useEffect(() => {
@@ -71,6 +96,11 @@ function App() {
   const handleAnalyzeDream = (dream) => {
     setSelectedDream(dream)
     setShowAnalyzer(true)
+  }
+
+  // If we're in shared view, show SharedDream component
+  if (isSharedView) {
+    return <SharedDream />
   }
 
   return (

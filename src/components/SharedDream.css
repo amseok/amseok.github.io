@@ -1,0 +1,651 @@
+/* Shared Dream Component Styles */
+.shared-dream-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a2e, #16213e, #1a1a3a);
+  position: relative;
+  overflow-x: hidden;
+  color: #e6e6fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Beautiful Dream Icon Effects - Blurry magical styling for desktop */
+.shared-dream-container .dream-icon {
+  display: inline-block;
+  margin: 0 15px;
+  animation: sharedDreamFloat 3s ease-in-out infinite;
+  font-size: 1.2em;
+  /* Make the emoji itself transparent so we only see the glow */
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  /* Strong blur and glow effects */
+  filter: blur(1px) 
+          drop-shadow(0 0 8px rgba(255, 255, 255, 1))
+          drop-shadow(0 0 16px rgba(255, 255, 255, 0.8))
+          drop-shadow(0 0 24px rgba(218, 112, 214, 0.6))
+          drop-shadow(0 0 32px rgba(186, 85, 211, 0.4));
+  {{/* text-shadow: 0 0 8px rgba(255, 255, 255, 1),
+    0 0 16px rgba(255, 255, 255, 0.9),
+    0 0 24px rgba(218, 112, 214, 0.7),
+    0 0 32px rgba(186, 85, 211, 0.5),
+    0 0 40px rgba(138, 43, 226, 0.4); */}}
+  opacity: 0.95;
+  transition: all 0.3s ease;
+}
+
+.shared-dream-container .dream-icon:hover {
+  transform: scale(1.2) translateY(-5px);
+  /* Even stronger blur and glow on hover */
+  filter: blur(1.5px) 
+          drop-shadow(0 0 12px rgba(255, 255, 255, 1))
+          drop-shadow(0 0 24px rgba(255, 255, 255, 0.9))
+          drop-shadow(0 0 36px rgba(218, 112, 214, 0.8))
+          drop-shadow(0 0 48px rgba(186, 85, 211, 0.6));
+  text-shadow: 0 0 12px rgba(255, 255, 255, 1),
+    0 0 24px rgba(255, 255, 255, 0.9),
+    0 0 36px rgba(218, 112, 214, 0.8),
+    0 0 48px rgba(186, 85, 211, 0.6),
+    0 0 60px rgba(138, 43, 226, 0.5);
+}
+
+.shared-dream-container .dream-icon:nth-child(3) {
+  animation-delay: 1.5s;
+}
+
+@keyframes sharedDreamFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+/* Loading State */
+.loading-shared {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+}
+
+.loading-spinner {
+  font-size: 3rem;
+  animation: dreamFloat 2s ease-in-out infinite;
+}
+
+@keyframes dreamFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Error State */
+.shared-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.shared-error h2 {
+  color: #b19cd9;
+  margin: 0 0 15px 0;
+  font-size: 2rem;
+}
+
+.shared-error p {
+  color: #a0a0a0;
+  max-width: 500px;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+/* Shared Header */
+.shared-header {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(25, 25, 46, 0.3);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(177, 156, 217, 0.2);
+}
+
+.shared-title {
+  font-size: 3rem;
+  background: linear-gradient(135deg, #b19cd9, #dda0dd, #e6e6fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 15px 0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.shared-subtitle {
+  color: #a0a0a0;
+  font-size: 1.2rem;
+  margin: 0 0 30px 0;
+  font-weight: 300;
+}
+
+.back-to-app-button {
+  background: linear-gradient(135deg, #6a5acd, #9370db);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3);
+}
+
+.back-to-app-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(106, 90, 205, 0.4);
+  background: linear-gradient(135deg, #7b68ee, #a569bd);
+}
+
+/* Main Content */
+.shared-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.shared-dream-card {
+  background: rgba(25, 25, 46, 0.8);
+  border-radius: 20px;
+  padding: 40px;
+  border: 1px solid rgba(177, 156, 217, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(106, 90, 205, 0.1);
+  margin-bottom: 30px;
+}
+
+/* Dream Header */
+.dream-header-shared {
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(177, 156, 217, 0.2);
+  padding-bottom: 20px;
+}
+
+.dream-title-shared {
+  font-size: 2.5rem;
+  color: #b19cd9;
+  margin: 0 0 15px 0;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.dream-meta-shared {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.dream-mood-shared {
+  background: rgba(106, 90, 205, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  color: #e6e6fa;
+  border: 1px solid rgba(177, 156, 217, 0.3);
+  text-transform: capitalize;
+}
+
+.dream-date-shared {
+  color: #a0a0a0;
+  font-size: 1rem;
+}
+
+/* Content Sections */
+.dream-content-shared,
+.dream-tags-shared,
+.dream-analysis-shared {
+  margin-bottom: 30px;
+}
+
+.dream-content-shared h3,
+.dream-tags-shared h3,
+.dream-analysis-shared h3 {
+  color: #dda0dd;
+  font-size: 1.5rem;
+  margin: 0 0 15px 0;
+  font-weight: 600;
+}
+
+.dream-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #e6e6fa;
+  white-space: pre-wrap;
+  background: rgba(15, 15, 35, 0.3);
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid #9370db;
+}
+
+/* Tags */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag-shared {
+  background: linear-gradient(135deg, rgba(106, 90, 205, 0.3), rgba(147, 112, 219, 0.3));
+  color: #e6e6fa;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(177, 156, 217, 0.3);
+}
+
+/* Analysis Section */
+.analysis-content {
+  background: rgba(15, 15, 35, 0.3);
+  padding: 25px;
+  border-radius: 12px;
+  border-left: 4px solid #32cd32;
+}
+
+/* Markdown Styling for Analysis */
+.markdown-h1, .markdown-h2 {
+  color: #dda0dd;
+  font-size: 1.3rem;
+  margin: 20px 0 10px 0;
+  font-weight: 600;
+}
+
+.markdown-h3, .markdown-h4 {
+  color: #b19cd9;
+  font-size: 1.1rem;
+  margin: 15px 0 8px 0;
+  font-weight: 500;
+}
+
+.markdown-p {
+  color: #e6e6fa;
+  line-height: 1.7;
+  margin: 10px 0;
+}
+
+.markdown-strong {
+  color: #dda0dd;
+  font-weight: 600;
+}
+
+.markdown-em {
+  color: #b19cd9;
+  font-style: italic;
+}
+
+.markdown-ul, .markdown-ol {
+  color: #e6e6fa;
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.markdown-li {
+  margin: 5px 0;
+  line-height: 1.6;
+}
+
+.markdown-blockquote {
+  border-left: 3px solid #9370db;
+  margin: 15px 0;
+  padding-left: 15px;
+  color: #c8a2c8;
+  font-style: italic;
+}
+
+.markdown-code {
+  background: rgba(147, 112, 219, 0.2);
+  color: #e6e6fa;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
+}
+
+/* Footer */
+.shared-footer {
+  text-align: center;
+  padding-top: 30px;
+  border-top: 1px solid rgba(177, 156, 217, 0.2);
+}
+
+.shared-attribution {
+  color: #a0a0a0;
+  font-size: 0.95rem;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.go-to-app-button,
+.cta-button {
+  background: linear-gradient(135deg, #32cd32, #00fa9a);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
+  font-weight: 600;
+}
+
+.go-to-app-button:hover,
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(50, 205, 50, 0.4);
+  background: linear-gradient(135deg, #3cb371, #00ff7f);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .shared-title {
+    font-size: 2.2rem;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* KEEP beautiful dream icon effects on mobile! ✨ */
+  .shared-dream-container .dream-icon {
+    margin: 0 6px;
+    font-size: 1em;
+    /* Enhanced magical glow effects for mobile */
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8)) 
+            drop-shadow(0 0 20px rgba(255, 255, 255, 0.4)) !important;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8),
+      0 0 25px rgba(218, 112, 214, 0.6),
+      0 0 35px rgba(186, 85, 211, 0.4) !important;
+    /* Slower, battery-friendly animation */
+    animation: sharedDreamFloat 6s ease-in-out infinite !important;
+    /* Keep transitions for touch feedback */
+    transition: all 0.3s ease !important;
+    opacity: 0.95;
+  }
+  
+  .shared-dream-card {
+    padding: 25px;
+    margin: 20px 10px;
+  }
+  
+  .dream-title-shared {
+    font-size: 2rem;
+  }
+  
+  .dream-meta-shared {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .shared-content {
+    padding: 20px 10px;
+  }
+  
+  .shared-header {
+    padding: 30px 15px;
+  }
+}
+
+/* Mobile Performance Optimizations */
+/* AGGRESSIVE Mobile Performance Optimizations */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  /* Maximum performance mode for shared dream - EXCLUDE dream icons to preserve magic! */
+  .shared-dream-container *:not(.dream-icon),
+  .shared-header *:not(.dream-icon),
+  .shared-dream-card,
+  .shared-content,
+  .back-to-app-button,
+  .go-to-app-button,
+  .cta-button {
+    /* Force hardware acceleration */
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    perspective: 1000px !important;
+    /* Maximum containment */
+    {{/* contain: layout style paint !important; */}}
+    /* Disable all animations */
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Completely disable backdrop-filter */
+  .shared-header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(25, 25, 46, 1) !important;
+  }
+
+  .shared-dream-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(25, 25, 46, 1) !important;
+    /* Simple border for visual separation */
+    border: 1px solid rgba(177, 156, 217, 0.4) !important;
+    /* Simple shadow */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Optimize container for maximum scroll performance */
+  .shared-dream-container {
+    /* Strong hardware acceleration */
+    transform: translate3d(0, 0, 0) !important;
+    will-change: scroll-position !important;
+    /* Optimize touch scrolling */
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+  }
+
+  /* COMPLETELY DISABLE STARS ON MOBILE */
+  {{/* .stars,
+  .stars2,
+  .stars3 {
+    display: none !important;
+    animation: none !important;
+    background: none !important;
+  } */}}
+  /* Remove all button hover effects but add mobile feedback */
+  .back-to-app-button:hover,
+  .go-to-app-button:hover,
+  .cta-button:hover {
+    transform: none !important;
+    box-shadow: 0 4px 15px rgba(106, 90, 205, 0.3) !important;
+  }
+
+  /* Enhanced active states for mobile feedback */
+  .back-to-app-button:active,
+  .go-to-app-button:active,
+  .cta-button:active {
+    transform: scale(0.98) !important;
+    opacity: 0.8 !important;
+    transition: transform 0.1s ease !important;
+  }
+
+  /* Keep buttons functional with transitions */
+  .back-to-app-button,
+  .go-to-app-button,
+  .cta-button {
+    box-shadow: 0 4px 15px rgba(106, 90, 205, 0.2) !important;
+    text-shadow: none !important;
+    transition: all 0.2s ease !important;
+  }
+
+  /* Remove text effects */
+  .shared-title {
+    text-shadow: none !important;
+  }
+
+  .shared-tagline {
+    text-shadow: none !important;
+  }
+}
+
+/* SMART mobile optimizations for very small screens */
+@media (max-width: 480px) {
+  /* Performance mode for small screens - but EXCLUDE dream icons to preserve magic! */
+  *:not(.dream-icon) {
+    /* Force hardware acceleration everywhere */
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    /* Disable ALL animations and transitions */
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  /* FORCE dream icons to keep their magical effects on small screens! */
+  .shared-dream-container .dream-icon {
+    animation: sharedDreamFloat 6s ease-in-out infinite !important;
+    transition: all 0.3s ease !important;
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8)) 
+            drop-shadow(0 0 20px rgba(255, 255, 255, 0.4)) !important;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8),
+      0 0 25px rgba(218, 112, 214, 0.6),
+      0 0 35px rgba(186, 85, 211, 0.4) !important;
+  }
+
+  /* Ultra-simple shared dream styling */
+  .shared-dream-card {
+    box-shadow: none !important;
+    border-radius: 12px !important;
+    {{/* background: #1f1f3a !important; */}}
+    border: 1px solid rgba(177, 156, 217, 0.4) !important;
+  }
+
+  .shared-header {
+    {{/* background: #1f1f3a !important; */}}
+    border-radius: 12px !important;
+  }
+
+  /* Remove all button effects */
+  .back-to-app-button,
+  .go-to-app-button,
+  .cta-button {
+    box-shadow: none !important;
+    border-radius: 8px !important;
+  }
+  /* Simplify all text effects but KEEP TITLE VISIBLE */
+  .shared-title {
+    /* Keep title visible with solid color fallback */
+    color: #b19cd9 !important;
+    text-shadow: none !important;
+    /* Remove gradient but keep solid color visible */
+    background: none !important;
+    -webkit-text-fill-color: #b19cd9 !important;
+  }
+  
+  .shared-tagline {
+    color: #e6e6fa !important;
+    text-shadow: none !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+  }
+
+
+  /* Simplify card styling */
+  .shared-dream-card {
+    box-shadow: 0 2px 8px rgba(106, 90, 205, 0.06);
+    border-radius: 15px;
+  }
+  /* Reduce gradient complexity if needed - Keep title visible */
+  .shared-title {
+    /* Ensure title remains visible on very small screens */
+    color: #b19cd9 !important;
+    -webkit-text-fill-color: #b19cd9 !important;
+    background: none !important;
+  }
+}
+
+/* Stars animation (copy from main app styles) */
+.stars, .stars2, .stars3 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.stars {
+  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="20" r="0.5" fill="white" opacity="0.8"/><circle cx="80" cy="30" r="0.3" fill="white" opacity="0.6"/><circle cx="30" cy="70" r="0.4" fill="white" opacity="0.7"/><circle cx="70" cy="80" r="0.2" fill="white" opacity="0.5"/><circle cx="50" cy="10" r="0.3" fill="white" opacity="0.9"/></svg>') repeat;
+  animation: sparkle 20s linear infinite;
+}
+
+.stars2 {
+  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="40" r="0.3" fill="white" opacity="0.4"/><circle cx="60" cy="20" r="0.2" fill="white" opacity="0.6"/><circle cx="90" cy="60" r="0.4" fill="white" opacity="0.3"/><circle cx="40" cy="90" r="0.2" fill="white" opacity="0.7"/></svg>') repeat;
+  animation: sparkle 25s linear infinite reverse;
+}
+
+.stars3 {
+  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="60" r="0.2" fill="white" opacity="0.5"/><circle cx="85" cy="15" r="0.3" fill="white" opacity="0.4"/><circle cx="45" cy="45" r="0.1" fill="white" opacity="0.8"/></svg>') repeat;
+  animation: sparkle 30s linear infinite;
+}
+
+@keyframes sparkle {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-100vh) rotate(360deg); }
+}
+
+/* Enhanced touch interactions for dream icons */
+@media (hover: none) and (pointer: coarse) {
+  /* Enhanced mobile hover state (for browsers that support it) */
+  .shared-dream-container .dream-icon:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.9)) 
+            drop-shadow(0 0 25px rgba(255, 255, 255, 0.5)) !important;
+    text-shadow: 0 0 18px rgba(255, 255, 255, 0.9),
+      0 0 30px rgba(218, 112, 214, 0.7),
+      0 0 40px rgba(186, 85, 211, 0.5) !important;
+    transform: scale(1.1) translateY(-2px) !important;
+  }
+
+  /* Beautiful touch feedback for dream icons */
+  .shared-dream-container .dream-icon:active {
+    transform: scale(1.2) translateY(-5px) !important;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1)) 
+            drop-shadow(0 0 30px rgba(255, 255, 255, 0.6))
+            drop-shadow(0 0 40px rgba(218, 112, 214, 0.4)) !important;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.9),
+      0 0 35px rgba(218, 112, 214, 0.7),
+      0 0 50px rgba(186, 85, 211, 0.5) !important;
+    transition: all 0.2s ease !important;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .shared-dream-container .dream-icon {
+    animation: none;
+  }
+  
+  .stars,
+  .stars2,
+  .stars3 {
+    animation: none;
+    opacity: 0.3;
+  }
+}

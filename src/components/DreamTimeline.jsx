@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ShareUtils from '../utils/ShareUtils'
 import './DreamTimeline.css'
 
 function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream }) {
@@ -7,6 +8,8 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
   const [editContent, setEditContent] = useState('')
   const [editMood, setEditMood] = useState('')
   const [editTags, setEditTags] = useState('')
+  const [shareSuccess, setShareSuccess] = useState(null)
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null)
 
   const startEditing = (dream) => {
     setEditingId(dream.id)
@@ -52,6 +55,50 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
       sad: '😢'
     }
     return moods[mood] || '😐'
+  }
+  const handleShareDream = async (dream) => {
+    try {
+      const shareResult = ShareUtils.generateShareUrl(dream)
+      
+      if (shareResult.url) {
+        const success = await ShareUtils.copyToClipboard(shareResult.url)
+        if (success) {
+          setShareSuccess(dream.id)
+          setTimeout(() => setShareSuccess(null), 3000)
+          
+          // Show warning if dream was truncated
+          if (shareResult.wasTruncated) {
+            setTimeout(() => {
+              alert('Note: Your dream was truncated for sharing due to length limits. The full dream will remain in your journal.')
+            }, 500)
+          }
+        } else {
+          alert('Failed to copy share link. Please try again.')
+        }
+      } else {
+        // Handle case where dream is too long to share
+        const validation = shareResult.validationResult
+        alert(`Cannot share dream: ${validation.reason}\n\nSuggestion: ${validation.suggestedAction || 'Try shortening the content'}`)
+      }
+    } catch (error) {
+      console.error('Error sharing dream:', error)
+      alert('Failed to share dream. Please try again.')
+    }
+  }
+
+  const handleDeleteClick = (dream) => {
+    setDeleteConfirmation(dream)
+  }
+
+  const confirmDelete = () => {
+    if (deleteConfirmation) {
+      onDeleteDream(deleteConfirmation.id)
+      setDeleteConfirmation(null)
+    }
+  }
+
+  const cancelDelete = () => {
+    setDeleteConfirmation(null)
   }
 
   if (dreams.length === 0) {
@@ -115,8 +162,7 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
                   </div>
                 </div>
               ) : (
-                <>
-                  <div className="dream-header">
+                <>                  <div className="dream-header">
                     <h3 className="dream-title">{dream.title}</h3>
                     <div className="dream-actions">
                       <button 
@@ -127,14 +173,20 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
                         🔮
                       </button>
                       <button 
+                        onClick={() => handleShareDream(dream)}
+                        className={`share-button ${shareSuccess === dream.id ? 'share-success' : ''}`}
+                        title={shareSuccess === dream.id ? "Share link copied!" : "Share this dream"}
+                      >
+                        {shareSuccess === dream.id ? '✅' : '📤'}
+                      </button>
+                      <button 
                         onClick={() => startEditing(dream)}
                         className="edit-button"
                         title="Edit dream"
                       >
                         ✏️
-                      </button>
-                      <button 
-                        onClick={() => onDeleteDream(dream.id)}
+                      </button>                      <button 
+                        onClick={() => handleDeleteClick(dream)}
                         className="delete-button"
                         title="Delete dream"
                       >
@@ -163,12 +215,41 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
                       Last updated: {formatDate(dream.updatedAt)}
                     </div>
                   )}
+                  
+                  {shareSuccess === dream.id && (
+                    <div className="share-success">
+                      Dream link copied to clipboard!
+                    </div>
+                  )}
                 </>
               )}
             </div>
           </div>
         ))}
-      </div>
+      </div>      {deleteConfirmation && (
+        <div className="delete-modal-overlay">
+          <div className="delete-modal">
+            <div className="delete-modal-header">
+              <span className="delete-modal-icon">🌙</span>
+              <h3>Release this dream?</h3>
+            </div>
+            <div className="delete-modal-content">
+              <p>Are you sure you want to release "<strong>{deleteConfirmation.title}</strong>" into the cosmic void?</p>
+              <p className="delete-warning">This action cannot be undone, and your dream will be lost forever.</p>
+            </div>
+            <div className="delete-modal-actions">
+              <button onClick={confirmDelete} className="confirm-delete-button">
+                <span className="button-icon">✨</span>
+                Release Dream
+              </button>
+              <button onClick={cancelDelete} className="cancel-delete-button">
+                <span className="button-icon">🛡️</span>
+                Keep Dream
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
