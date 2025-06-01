@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import ShareUtils from '../utils/ShareUtils'
+import ShareUtils from '../utils/ShareUtilsImproved'
 import './DreamTimeline.css'
 
 function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream }) {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import ShareUtils from '../utils/ShareUtils'
+import ShareUtils from '../utils/ShareUtilsImproved'
 import './SharedDream.css'
 
 function SharedDream() {

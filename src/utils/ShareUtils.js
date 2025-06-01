@@ -5,13 +5,13 @@
 // ---------------------------------------------------
 // This module replaces the old Base‑64 approach with LZ‑String’s
 // URI‑component compression, reducing very large dream entries to
-// ~25–40 % of their original size while remaining fully URL‑safe.
+// ~25–40% of their original size while remaining fully URL‑safe.
 // Keys are also minified to keep the raw JSON small before
 // compression.
 
 import {
-    compressToEncodedURIComponent as compress,
-    decompressFromEncodedURIComponent as decompress,
+  compressToEncodedURIComponent as compress,
+  decompressFromEncodedURIComponent as decompress,
 } from "lz-string";
 
 class ShareUtils {

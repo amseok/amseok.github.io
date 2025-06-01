@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compression Test</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 40px; 
+            background: #f5f5f5; 
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            max-width: 800px; 
+        }
+        .result { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 5px; 
+            border-left: 4px solid #007acc; 
+        }
+        .improvement { 
+            background: #d4edda; 
+            border-left-color: #28a745; 
+        }
+        .error { 
+            background: #f8d7da; 
+            border-left-color: #dc3545; 
+        }
+        button { 
+            background: #007acc; 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px; 
+        }
+        button:hover { 
+            background: #005a9e; 
+        }
+        pre { 
+            background: #1e1e1e; 
+            color: #d4d4d4; 
+            padding: 15px; 
+            border-radius: 5px; 
+            overflow-x: auto; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Dream Sharing Compression Test</h1>
+        <p>This test compares the original LZ-String compression with the improved fflate + preprocessing method.</p>
+        
+        <button onclick="runCompressionTest()">Run Compression Test</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        import ShareUtils from './src/utils/ShareUtils.js';
+        import ShareUtilsImproved from './src/utils/ShareUtilsImproved.js';
+
+        // Sample long dream for testing
+        const longDream = {
+            title: "Epic Lucid Dream Adventure in a Strange Underwater House",
+            content: `I was dreaming that I was in this strange underwater house. The house was completely submerged but somehow I could breathe normally. I remember feeling very confused at first, but then I became lucid and realized I was dreaming.
+
+The house had these beautiful crystal windows and when I looked outside, I could see all sorts of sea creatures swimming around. There were dolphins and colorful fish, and even some strange creatures I had never seen before. The water was so clear and bright, almost glowing.
+
+I started flying through the house, moving from room to room. Each room seemed to represent different emotions or memories from my life. In one room, I felt overwhelming happiness and saw images of my childhood. In another room, I experienced some anxiety about work, but because I was lucid dreaming, I was able to transform that anxiety into confidence and clarity.
+
+I remember meeting a person in one of the rooms who seemed very wise. They told me that the house represented my unconscious mind, and that each room contained different aspects of my personality and experiences. This person explained that the underwater setting symbolized diving deep into my subconscious thoughts and feelings.
+
+Suddenly, I found myself in a room filled with floating symbols and images. There were geometric shapes, numbers, letters, and even some symbols I didn't recognize. The wise person explained that these represented the different ways my mind processes information and experiences.
+
+I felt a strong sense of peace and understanding. The dream felt very meaningful and I woke up feeling refreshed and enlightened. I had this feeling that I had learned something important about myself during the dream.
+
+When I awakened, I immediately wrote down everything I could remember because the dream felt so significant. I've been thinking about the symbolic meaning of the underwater house and what it might represent in my waking life. The experience of being lucid and able to transform my emotions was particularly powerful.`,
+            
+            mood: "wonderful",
+            tags: ["lucid", "underwater", "house", "flying", "symbols", "meaningful", "transformative"],
+            createdAt: new Date().toISOString(),
+            analysis: `This dream appears to be rich with symbolic meaning related to self-exploration and emotional processing. The underwater house likely represents the dreamer's unconscious mind, with water often symbolizing emotions and the depths of consciousness.
+
+The lucid dreaming aspect suggests a high level of self-awareness and control, allowing the dreamer to actively engage with and transform difficult emotions like anxiety into positive feelings like confidence. This transformation ability is a powerful psychological tool.
+
+The wise person encountered in the dream may represent the dreamer's inner wisdom or higher self, providing guidance and insight. The room with floating symbols suggests the mind's complex processing of information and experiences.
+
+The overall feeling of peace and understanding indicates successful integration of unconscious material into conscious awareness. This type of dream often occurs during periods of personal growth and self-discovery.
+
+The underwater setting, combined with the ability to breathe normally, suggests comfort with exploring deep emotional territory while maintaining a sense of safety and control. The crystal windows provide clarity of vision, symbolizing clear insight into one's inner world.`
+        };
+
+        window.runCompressionTest = function() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<h2>🔄 Running Tests...</h2>';
+            
+            try {
+                ShareUtilsImproved.debugRoundtrip(longDream);
+                // Test original method
+                console.log('Testing Original LZ-String Method...');
+                const originalEncoded = ShareUtils.encodeDream(longDream);
+                const originalUrl = ShareUtils.generateShareUrl(longDream);
+                
+                // Test improved method
+                console.log('Testing Improved fflate Method...');
+                const improvedEncoded = ShareUtilsImproved.encodeDream(longDream);
+                const improvedUrl = ShareUtilsImproved.generateShareUrl(longDream);
+                
+                // Test roundtrip integrity
+                const originalDecoded = ShareUtils.decodeDream(originalEncoded);
+                const improvedDecoded = ShareUtilsImproved.decodeDream(improvedEncoded);
+                
+                const originalIntact = originalDecoded && originalDecoded.content === longDream.content;
+                const improvedIntact = improvedDecoded && improvedDecoded.content === longDream.content;
+                
+                // Calculate improvements
+                const rawJson = JSON.stringify(longDream);
+                const improvement = originalEncoded && improvedEncoded ? 
+                    ((originalEncoded.length - improvedEncoded.length) / originalEncoded.length * 100) : 0;
+                
+                const urlImprovement = originalUrl.url && improvedUrl.url ? 
+                    ((originalUrl.url.length - improvedUrl.url.length) / originalUrl.url.length * 100) : 0;
+                
+                // Display results
+                resultsDiv.innerHTML = `
+                    <h2>📊 Compression Test Results</h2>
+                    
+                    <div class="result">
+                        <h3>📏 Size Comparison</h3>
+                        <p><strong>Raw JSON:</strong> ${rawJson.length} characters</p>
+                        <p><strong>Original (LZ-String):</strong> ${originalEncoded?.length || 'failed'} characters</p>
+                        <p><strong>Improved (fflate + preprocessing):</strong> ${improvedEncoded?.length || 'failed'} characters</p>
+                    </div>
+                    
+                    <div class="result improvement">
+                        <h3>✨ Improvement</h3>
+                        <p><strong>Compression improvement:</strong> ${improvement.toFixed(1)}% smaller!</p>
+                        <p><strong>URL improvement:</strong> ${urlImprovement.toFixed(1)}% smaller!</p>
+                    </div>
+                    
+                    <div class="result">
+                        <h3>📎 URL Lengths</h3>
+                        <p><strong>Original URL:</strong> ${originalUrl.url?.length || 'failed'} characters</p>
+                        <p><strong>Improved URL:</strong> ${improvedUrl.url?.length || 'failed'} characters</p>
+                    </div>
+                    
+                    <div class="result">
+                        <h3>🔄 Roundtrip Integrity</h3>
+                        <p><strong>Original method:</strong> ${originalIntact ? '✅ PASS' : '❌ FAIL'}</p>
+                        <p><strong>Improved method:</strong> ${improvedIntact ? '✅ PASS' : '❌ FAIL'}</p>
+                    </div>
+                    
+                    <div class="result">
+                        <h3>📈 Compression Ratios</h3>
+                        <p><strong>Raw → Original:</strong> ${((rawJson.length - (originalEncoded?.length || 0)) / rawJson.length * 100).toFixed(1)}% reduction</p>
+                        <p><strong>Raw → Improved:</strong> ${((rawJson.length - (improvedEncoded?.length || 0)) / rawJson.length * 100).toFixed(1)}% reduction</p>
+                    </div>
+                    
+                    <details style="margin-top: 20px;">
+                        <summary style="cursor: pointer; font-weight: bold;">🔍 Show Compressed Tokens (First 200 chars)</summary>
+                        <div style="margin-top: 10px;">
+                            <p><strong>Original Token:</strong></p>
+                            <pre>${originalEncoded ? originalEncoded.substring(0, 200) + '...' : 'Failed'}</pre>
+                            <p><strong>Improved Token:</strong></p>
+                            <pre>${improvedEncoded ? improvedEncoded.substring(0, 200) + '...' : 'Failed'}</pre>
+                        </div>
+                    </details>
+                `;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Test Failed</h3>
+                        <p>Error: ${error.message}</p>
+                        <pre>${error.stack}</pre>
+                    </div>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>

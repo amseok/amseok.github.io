@@ -5,7 +5,7 @@ import DreamEntry from './components/DreamEntry'
 import DreamTimeline from './components/DreamTimeline'
 import SharedDream from './components/SharedDream'
 import DreamStorage from './utils/DreamStorage'
-import ShareUtils from './utils/ShareUtils'
+import ShareUtils from './utils/ShareUtilsImproved'
 
 function App() {
   const [dreams, setDreams] = useState([])
