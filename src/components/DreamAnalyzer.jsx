@@ -60,7 +60,7 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
 - **Tags:** ${dream.tags ? dream.tags.join(", ") : "None"}`
                         }
                     ],
-                    max_tokens: 512,
+                    max_tokens: 800,
                     temperature: 0.7
                 })
             })
