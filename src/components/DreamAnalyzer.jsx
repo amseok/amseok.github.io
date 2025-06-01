@@ -42,7 +42,7 @@ function DreamAnalyzer({ dream, onClose, onUpdateDreamAnalysis }) {
                             role: "system",
                             content: "You are a supportive dream interpreter versed in psychology and symbolism. Offer thoughtful, uplifting insights. Use markdown headings; highlight key points with **bold** and *italics*. Mention negatives only when clearly warranted. Don't write too long."
                         },
-
+// ## Themes
                         {
                             role: "user",
                             content: `Interpret the dream below using these sections:
@@ -50,7 +50,6 @@ function DreamAnalyzer({ dream, onClose, onUpdateDreamAnalysis }) {
 ## Overview
 ## Symbols
 ## Psychology
-## Themes
 
 Use **bold** for key ideas, *italics* for symbols, and bullet points where helpful.
 
