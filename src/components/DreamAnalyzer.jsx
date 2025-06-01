@@ -40,7 +40,7 @@ function DreamAnalyzer({ dream, onClose, onUpdateDreamAnalysis }) {
                     messages: [
                         {
                             role: "system",
-                            content: "You are a supportive dream interpreter versed in psychology and symbolism. Offer thoughtful, uplifting insights. Use markdown headings; highlight key points with **bold** and *italics*. Mention negatives only when clearly warranted."
+                            content: "You are a supportive dream interpreter versed in psychology and symbolism. Offer thoughtful, uplifting insights. Use markdown headings; highlight key points with **bold** and *italics*. Mention negatives only when clearly warranted. Don't write too long."
                         },
 
                         {
@@ -61,7 +61,7 @@ Use **bold** for key ideas, *italics* for symbols, and bullet points where helpf
 - **Tags:** ${dream.tags ? dream.tags.join(", ") : "None"}`
                         }
                     ],
-                    max_tokens: 400,
+                    max_tokens: 512,
                     temperature: 0.7
                 })
             })
