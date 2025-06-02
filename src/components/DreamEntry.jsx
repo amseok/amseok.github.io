@@ -6,12 +6,14 @@ function DreamEntry({ onAddDream }) {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [mood, setMood] = useState('neutral')
-    const [tags, setTags] = useState('')
-    const [isExpanded, setIsExpanded] = useState(false)
+    const [tags, setTags] = useState('');
+    const [isExpanded, setIsExpanded] = useState(false);
     const [isMoodDropdownOpen, setIsMoodDropdownOpen] = useState(false)
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 })
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [error, setError] = useState(null)
     const dropdownRef = useRef(null)
-    const buttonRef = useRef(null)
+    const buttonRef = useRef(null);
 
     const moodOptions = [
         { value: 'wonderful', label: '🌟 Wonderful' },
@@ -21,6 +23,17 @@ function DreamEntry({ onAddDream }) {
         { value: 'scary', label: '😨 Scary' },
         { value: 'sad', label: '😢 Sad' }
     ]
+
+    // Auto-clear error messages after 10 seconds
+    useEffect(() => {
+        if (error) {
+            const timer = setTimeout(() => {
+                setError(null)
+            }, 10000) // 10 seconds
+
+            return () => clearTimeout(timer)
+        }
+    }, [error])
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -60,13 +73,11 @@ function DreamEntry({ onAddDream }) {
         if (isMoodDropdownOpen) {
             window.addEventListener('resize', handleWindowEvents)
             window.addEventListener('scroll', handleWindowEvents)
-        }
-
-        return () => {
+        }        return () => {
             window.removeEventListener('resize', handleWindowEvents)
             window.removeEventListener('scroll', handleWindowEvents)
         }
-    }, [isMoodDropdownOpen])
+    }, [isMoodDropdownOpen]);
 
     const toggleDropdown = () => {
         if (!isMoodDropdownOpen && buttonRef.current) {
@@ -78,23 +89,35 @@ function DreamEntry({ onAddDream }) {
             })
         }
         setIsMoodDropdownOpen(!isMoodDropdownOpen)
-    }
+    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         if (!title.trim() || !content.trim()) return
 
-        onAddDream({
-            title: title.trim(),
-            content: content.trim(),
-            mood,
-            tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag)
-        })        // Reset form
-        setTitle('')
-        setContent('')
-        setMood('neutral')
-        setTags('')
-        setIsExpanded(false)
+        setIsSubmitting(true)
+        setError(null)
+
+        try {
+            await onAddDream({
+                title: title.trim(),
+                content: content.trim(),
+                mood,
+                tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+            })
+            
+            // Reset form only on success
+            setTitle('')
+            setContent('')
+            setMood('neutral')
+            setTags('')
+            setIsExpanded(false)
+        } catch (error) {
+            console.error('Failed to save dream:', error)
+            setError('Failed to save dream. Please try again.')
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     return (
@@ -106,9 +129,23 @@ function DreamEntry({ onAddDream }) {
                 <span className="plus-icon">{isExpanded ? '−' : '+'}</span>
                 {isExpanded ? 'Cancel' : 'Record a Dream'}
             </button>
-
+            
             {isExpanded && (
                 <form onSubmit={handleSubmit} className="dream-form">
+                    {error && (
+                        <div className="error-message" style={{
+                            backgroundColor: '#ffebee',
+                            color: '#c62828',
+                            padding: '8px 12px',
+                            margin: '0 0 16px 0',
+                            borderRadius: '4px',
+                            border: '1px solid #ffcdd2',
+                            fontSize: '14px'
+                        }}>
+                            {error}
+                        </div>
+                    )}
+                    
                     <div className="form-group">
                         <input
                             type="text"
@@ -131,7 +168,9 @@ function DreamEntry({ onAddDream }) {
                     </div>
                     <div className="form-group">
                         <label className="mood-label">Dream Mood:</label>
-                        <div className="custom-select-container" ref={dropdownRef}>                            <button
+                        <div className="custom-select-container" ref={dropdownRef}>
+                            
+                            <button
                             type="button"
                             ref={buttonRef}
                             className="custom-select-button"
@@ -142,9 +181,9 @@ function DreamEntry({ onAddDream }) {
                             </span>
                             <span className={`dropdown-arrow ${isMoodDropdownOpen ? 'open' : ''}`}>
                                 ▼
-                            </span>
-                        </button>
-                            {isMoodDropdownOpen && createPortal(
+                            </span>                        </button>
+                        
+                        {isMoodDropdownOpen && createPortal(
                                 <div
                                     className="custom-dropdown-portal"
                                     style={{
@@ -181,13 +220,16 @@ function DreamEntry({ onAddDream }) {
                             placeholder="Tags (comma separated): flying, family, water..."
                             value={tags}
                             onChange={(e) => setTags(e.target.value)}
-                            className="tags-input"
-                        />
+                            className="tags-input"                        />
                     </div>
-
+                    
                     <div className="form-actions">
-                        <button type="submit" className="submit-button">
-                            ✨ Save Dream
+                        <button 
+                            type="submit" 
+                            className="submit-button"
+                            disabled={isSubmitting || !title.trim() || !content.trim()}
+                        >
+                            {isSubmitting ? '💫 Saving...' : '✨ Save Dream'}
                         </button>
                     </div>
                 </form>

@@ -1,250 +1,201 @@
-// Dream Sharing Utilities – compressed & URL‑safe
-// ---------------------------------------------------
-// Install dependency first:
-//     npm i lz-string
-// ---------------------------------------------------
-// This module replaces the old Base‑64 approach with LZ‑String’s
-// URI‑component compression, reducing very large dream entries to
-// ~25–40% of their original size while remaining fully URL‑safe.
-// Keys are also minified to keep the raw JSON small before
-// compression.
+// Simple Dream Sharing Utilities using Backend API
+// -------------------------------------------------
+// Replaces complex URL compression with simple server-side sharing
 
-import {
-  compressToEncodedURIComponent as compress,
-  decompressFromEncodedURIComponent as decompress,
-} from "lz-string";
+import ApiService from '../services/ApiService.js';
 
 class ShareUtils {
-  /* --------------------------------------------------------
-   * Configurable limits
-   * ------------------------------------------------------*/
-  static MAX_URL_LENGTH = 4000; // safe across browsers / chat apps
-  static MAX_CONTENT_LENGTH = 30000; // before forced truncation
-
-  /* --------------------------------------------------------
-   * Public API
-   * ------------------------------------------------------*/
-
   /**
-   * Encode a dream object into a URL‑safe compressed string
-   * @param {Object} dream – full dream entity
-   * @returns {string|null} compressed token or null on error
+   * Share a dream and get a share URL
+   * @param {Object} dream - Dream object to share
+   * @returns {Promise<Object>} - Share result with token and URL
    */
-  static encodeDream(dream) {
+  static async shareDream(dream) {
     try {
-      // Step 1: strip to essentials + minify keys
-      const shareable = this.#toShareable(dream);
-      // Step 2: stringify & compress (already URI‑safe)
-      return compress(JSON.stringify(shareable));
-    } catch (err) {
-      console.error("ShareUtils.encodeDream failed →", err);
-      return null;
-    }
-  }
-
-  /**
-   * Decode a compressed token back to a dream object
-   * @param {string} token – value from URL ?shared=
-   * @returns {Object|null} fully restored dream or null
-   */
-  static decodeDream(token) {
-    try {
-      const json = decompress(token);
-      if (!json) return null;
-      const shareable = JSON.parse(json);
-      const dream = this.#fromShareable(shareable);
-      return this.validateSharedDream(dream) ? dream : null;
-    } catch (err) {
-      console.error("ShareUtils.decodeDream failed →", err);
-      return null;
+      const result = await ApiService.shareDream(dream.id);
+      
+      const shareUrl = `${window.location.origin}/shared/${result.share_token}`;
+      
+      return {
+        success: true,
+        shareToken: result.share_token,
+        shareUrl: shareUrl,
+        message: 'Dream shared successfully'
+      };
+    } catch (error) {
+      console.error('Share dream error:', error);
+      return {
+        success: false,
+        error: error.message || 'Failed to share dream'
+      };
     }
   }
 
   /**
-   * Build a complete shareable URL for a dream.
-   * If content is too large, will (optionally) truncate.
+   * Unshare a dream
+   * @param {Object} dream - Dream object to unshare
+   * @returns {Promise<Object>} - Unshare result
    */
-  static generateShareUrl(dream, allowTruncation = true) {
-    let candidate = dream;
-    let truncated = false;
-    let validation = this.validateShareSize(candidate);
-
-    if (!validation.canShare && allowTruncation) {
-      candidate = this.createTruncatedDream(dream);
-      validation = this.validateShareSize(candidate);
-      truncated = true;
-    }
-
-    if (!validation.canShare) {
-      return {
-        url: null,
-        wasTruncated: truncated,
-        validationResult: validation,
-      };
-    }
-
-    const encoded = this.encodeDream(candidate);
-    if (!encoded) {
-      return {
-        url: null,
-        wasTruncated: truncated,
-        validationResult: { canShare: false, reason: "Encoding failed" },
-      };
-    }
-
-    const baseUrl = window.location.origin + window.location.pathname;
-    return {
-      url: `${baseUrl}?shared=${encoded}`,
-      wasTruncated: truncated,
-      validationResult: validation,
-    };
-  }
-
-  /* --------------------------------------------------------
-   * Size checks & truncation helpers
-   * ------------------------------------------------------*/
-
-  static validateShareSize(dream) {
-    const token = this.encodeDream(dream);
-    if (!token) return { canShare: false, reason: "encode failed" };
-
-    const fullLength =
-      (window.location.origin + window.location.pathname + "?shared=").length +
-      token.length;
-
-    if (fullLength > this.MAX_URL_LENGTH) {
-      return {
-        canShare: false,
-        reason: "Dream too big for URL",
-        estimatedLength: fullLength,
-        maxLength: this.MAX_URL_LENGTH,
-      };
-    }
-    return { canShare: true };
-  }
-
-  static createTruncatedDream(dream, maxContentLength = 15000) {
-    const copy = { ...dream };
-    if (copy.content && copy.content.length > maxContentLength) {
-      copy.content =
-        copy.content.substring(0, maxContentLength) +
-        "\n\n[Content truncated – open in app for full text]";
-    }
-    if (!this.validateShareSize(copy).canShare && copy.analysis) {
-      copy.analysis = "[Analysis truncated – open in app for full text]";
-    }
-    return copy;
-  }
-
-  /* --------------------------------------------------------
-   * Validation
-   * ------------------------------------------------------*/
-
-  static validateSharedDream(d) {
-    return (
-      d &&
-      typeof d.title === "string" &&
-      typeof d.content === "string" &&
-      typeof d.mood === "string" &&
-      Array.isArray(d.tags) &&
-      typeof d.createdAt === "string"
-    );
-  }
-
-  /* --------------------------------------------------------
-   * Clipboard & navigation helpers (unchanged)
-   * ------------------------------------------------------*/
-
-  static async copyToClipboard(text) {
+  static async unshareDream(dream) {
     try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
+      await ApiService.unshareDream(dream.id);
+      
+      return {
+        success: true,
+        message: 'Dream unshared successfully'
+      };
+    } catch (error) {
+      console.error('Unshare dream error:', error);
+      return {
+        success: false,
+        error: error.message || 'Failed to unshare dream'
+      };
+    }
+  }
+
+  /**
+   * Get a shared dream by token
+   * @param {string} shareToken - Share token from URL
+   * @returns {Promise<Object>} - Dream data or error
+   */
+  static async getSharedDream(shareToken) {
+    try {
+      const result = await ApiService.getSharedDream(shareToken);
+      
+      return {
+        success: true,
+        dream: result.dream
+      };
+    } catch (error) {
+      console.error('Get shared dream error:', error);
+      return {
+        success: false,
+        error: error.message || 'Failed to load shared dream'
+      };
+    }
+  }
+
+  /**
+   * Copy share URL to clipboard
+   * @param {string} shareUrl - URL to copy
+   * @returns {Promise<boolean>} - Success status
+   */
+  static async copyToClipboard(shareUrl) {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      return true;
+    } catch (error) {
+      console.error('Copy to clipboard error:', error);
+      // Fallback for older browsers
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = shareUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
         return true;
+      } catch (fallbackError) {
+        console.error('Fallback copy error:', fallbackError);
+        return false;
       }
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.left = "-999999px";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      const ok = document.execCommand("copy");
-      document.body.removeChild(ta);
-      return ok;
-    } catch (e) {
-      console.error("copyToClipboard failed →", e);
+    }
+  }
+
+  /**
+   * Generate a shareable message for social media
+   * @param {Object} dream - Dream object
+   * @param {string} shareUrl - Share URL
+   * @returns {string} - Formatted share message
+   */
+  static generateShareMessage(dream, shareUrl) {
+    const title = dream.title || 'Untitled Dream';
+    const message = `Check out my dream: "${title}" - ${shareUrl}`;
+    return message;
+  }
+
+  /**
+   * Validate share token format
+   * @param {string} token - Token to validate
+   * @returns {boolean} - Is valid token
+   */
+  static isValidShareToken(token) {
+    if (!token || typeof token !== 'string') {
       return false;
     }
+    
+    // UUID v4 format validation
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(token);
   }
 
-  static navigateToMainApp() {
-    const url = new URL(window.location);
-    url.searchParams.delete("shared");
-    window.history.pushState({}, "", url.toString());
-    window.dispatchEvent(new CustomEvent("navigationChange"));
+  /**
+   * Extract share token from URL
+   * @param {string} url - URL or pathname
+   * @returns {string|null} - Extracted token or null
+   */  static extractTokenFromUrl(url) {
+    const match = url.match(/\/shared\/([^/?#]+)/);
+    return match ? match[1] : null;
   }
 
+  /**
+   * Check if current URL is a shared dream URL
+   * @returns {boolean} - Is shared URL
+   */
   static isSharedUrl() {
-    return new URLSearchParams(window.location.search).has("shared");
+    return window.location.pathname.includes('/shared/');
   }
 
-  static getSharedDreamFromUrl() {
-    const code = new URLSearchParams(window.location.search).get("shared");
-    return code ? this.decodeDream(code) : null;
+  /**
+   * Get share token from current URL
+   * @returns {string|null} - Share token or null
+   */
+  static getShareTokenFromUrl() {
+    return this.extractTokenFromUrl(window.location.pathname);
   }
 
-  static formatShareDate(iso) {
-    const date = new Date(iso);
-    return isNaN(date)
-      ? "Unknown date"
-      : date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+  /**
+   * Navigate to main app (remove shared URL)
+   */
+  static navigateToMainApp() {
+    window.history.pushState({}, '', '/');
+    window.dispatchEvent(new CustomEvent('navigationChange'));
   }
 
+  /**
+   * Format share date for display
+   * @param {string} dateString - ISO date string
+   * @returns {string} - Formatted date
+   */  static formatShareDate(dateString) {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch {
+      return 'Unknown date';
+    }
+  }
+
+  /**
+   * Get mood emoji for display
+   * @param {string} mood - Mood string
+   * @returns {string} - Emoji
+   */
   static getMoodEmoji(mood) {
-    return (
-      {
-        wonderful: "🌟",
-        peaceful: "😌",
-        neutral: "😐",
-        strange: "🤔",
-        scary: "😨",
-        sad: "😢",
-      }[mood] || "😐"
-    );
-  }
-
-  /* --------------------------------------------------------
-   * Internal helpers – key minification
-   * ------------------------------------------------------*/
-
-  static #toShareable(dream) {
-    return {
-      v: "1", // share format version
-      t: dream.title,
-      c: dream.content,
-      m: dream.mood,
-      g: dream.tags || [],
-      d: dream.createdAt,
-      a: dream.analysis ?? null,
+    const moodEmojis = {
+      wonderful: '🌟',
+      peaceful: '😌',
+      neutral: '😐',
+      strange: '🤔',
+      scary: '😨',
+      sad: '😢',
     };
-  }
-
-  static #fromShareable(s) {
-    return {
-      title: s.t,
-      content: s.c,
-      mood: s.m,
-      tags: s.g,
-      createdAt: s.d,
-      analysis: s.a,
-      shareVersion: s.v,
-    };
+    return moodEmojis[mood] || '😐';
   }
 }
 

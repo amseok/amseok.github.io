@@ -1,25 +1,47 @@
 import { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import ShareUtils from '../utils/ShareUtilsImproved'
+import ShareUtils from '../utils/ShareUtils'
 import './SharedDream.css'
 
 function SharedDream() {
   const [dream, setDream] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-
   useEffect(() => {
-    // Get shared dream from URL
-    const sharedDream = ShareUtils.getSharedDreamFromUrl()
-    
-    if (sharedDream) {
-      setDream(sharedDream)
-      setError(null)
-    } else {
-      setError('Invalid or corrupted share link')
+    const loadSharedDream = async () => {
+      // Get share token from URL
+      const shareToken = ShareUtils.getShareTokenFromUrl()
+      
+      if (!shareToken) {
+        setError('No share token found in URL')
+        setLoading(false)
+        return
+      }
+
+      if (!ShareUtils.isValidShareToken(shareToken)) {
+        setError('Invalid share token format')
+        setLoading(false)
+        return
+      }
+
+      try {
+        const result = await ShareUtils.getSharedDream(shareToken)
+        
+        if (result.success) {
+          setDream(result.dream)
+          setError(null)
+        } else {
+          setError(result.error || 'Failed to load shared dream')
+        }
+      } catch (error) {
+        console.error('Error loading shared dream:', error)
+        setError('Failed to load shared dream')
+      } finally {
+        setLoading(false)
+      }
     }
-    
-    setLoading(false)
+
+    loadSharedDream()
   }, [])
 
   const handleGoToApp = () => {

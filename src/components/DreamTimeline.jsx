@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import ShareUtils from '../utils/ShareUtilsImproved'
+import { useState, useEffect } from 'react'
+import ShareUtils from '../utils/ShareUtils'
 import './DreamTimeline.css'
 
 function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream }) {
@@ -10,6 +10,31 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
   const [editTags, setEditTags] = useState('')
   const [shareSuccess, setShareSuccess] = useState(null)
   const [deleteConfirmation, setDeleteConfirmation] = useState(null)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [error, setError] = useState(null)
+
+  // Auto-clear error messages after 10 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null)
+      }, 10000) // 10 seconds
+
+      return () => clearTimeout(timer)
+    }
+  }, [error])
+
+  // Auto-clear share success messages after 10 seconds
+  useEffect(() => {
+    if (shareSuccess) {
+      const timer = setTimeout(() => {
+        setShareSuccess(null)
+      }, 10000) // 10 seconds
+
+      return () => clearTimeout(timer)
+    }
+  }, [shareSuccess])
 
   const startEditing = (dream) => {
     setEditingId(dream.id)
@@ -18,16 +43,24 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
     setEditMood(dream.mood)
     setEditTags(dream.tags ? dream.tags.join(', ') : '')
   }
-
-  const saveEdit = () => {
-    onUpdateDream(editingId, {
-      title: editTitle.trim(),
-      content: editContent.trim(),
-      mood: editMood,
-      tags: editTags.split(',').map(tag => tag.trim()).filter(tag => tag),
-      updatedAt: new Date().toISOString()
-    })
-    setEditingId(null)
+  const saveEdit = async () => {
+    setIsUpdating(true)
+    setError(null)
+    
+    try {
+      await onUpdateDream(editingId, {
+        title: editTitle.trim(),
+        content: editContent.trim(),
+        mood: editMood,
+        tags: editTags.split(',').map(tag => tag.trim()).filter(tag => tag)
+      })
+      setEditingId(null)
+    } catch (error) {
+      console.error('Failed to update dream:', error)
+      setError('Failed to update dream. Please try again.')
+    } finally {
+      setIsUpdating(false)
+    }
   }
 
   const cancelEdit = () => {
@@ -44,7 +77,6 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
       minute: '2-digit'
     })
   }
-
   const getMoodEmoji = (mood) => {
     const moods = {
       wonderful: '🌟',
@@ -56,29 +88,21 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
     }
     return moods[mood] || '😐'
   }
+
   const handleShareDream = async (dream) => {
     try {
-      const shareResult = ShareUtils.generateShareUrl(dream)
+      const shareResult = await ShareUtils.shareDream(dream)
       
-      if (shareResult.url) {
-        const success = await ShareUtils.copyToClipboard(shareResult.url)
+      if (shareResult.success) {
+        const success = await ShareUtils.copyToClipboard(shareResult.shareUrl)
         if (success) {
           setShareSuccess(dream.id)
           setTimeout(() => setShareSuccess(null), 3000)
-          
-          // Show warning if dream was truncated
-          if (shareResult.wasTruncated) {
-            setTimeout(() => {
-              alert('Note: Your dream was truncated for sharing due to length limits. The full dream will remain in your journal.')
-            }, 500)
-          }
         } else {
           alert('Failed to copy share link. Please try again.')
         }
       } else {
-        // Handle case where dream is too long to share
-        const validation = shareResult.validationResult
-        alert(`Cannot share dream: ${validation.reason}\n\nSuggestion: ${validation.suggestedAction || 'Try shortening the content'}`)
+        alert(`Failed to share dream: ${shareResult.error}`)
       }
     } catch (error) {
       console.error('Error sharing dream:', error)
@@ -89,11 +113,20 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
   const handleDeleteClick = (dream) => {
     setDeleteConfirmation(dream)
   }
-
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (deleteConfirmation) {
-      onDeleteDream(deleteConfirmation.id)
-      setDeleteConfirmation(null)
+      setIsDeleting(true)
+      setError(null)
+      
+      try {
+        await onDeleteDream(deleteConfirmation.id)
+        setDeleteConfirmation(null)
+      } catch (error) {
+        console.error('Failed to delete dream:', error)
+        setError('Failed to delete dream. Please try again.')
+      } finally {
+        setIsDeleting(false)
+      }
     }
   }
 
@@ -154,11 +187,35 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
                       onChange={(e) => setEditTags(e.target.value)}
                       placeholder="Tags..."
                       className="edit-tags-input"
-                    />
-                  </div>
+                    />                  </div>
+                  {error && (
+                    <div className="error-message" style={{
+                      backgroundColor: '#ffebee',
+                      color: '#c62828',
+                      padding: '8px 12px',
+                      margin: '8px 0',
+                      borderRadius: '4px',
+                      border: '1px solid #ffcdd2',
+                      fontSize: '14px'
+                    }}>
+                      {error}
+                    </div>
+                  )}
                   <div className="edit-actions">
-                    <button onClick={saveEdit} className="save-button">💾 Save</button>
-                    <button onClick={cancelEdit} className="cancel-button">❌ Cancel</button>
+                    <button 
+                      onClick={saveEdit} 
+                      className="save-button"
+                      disabled={isUpdating}
+                    >
+                      {isUpdating ? '💫 Saving...' : '💾 Save'}
+                    </button>
+                    <button 
+                      onClick={cancelEdit} 
+                      className="cancel-button"
+                      disabled={isUpdating}
+                    >
+                      ❌ Cancel
+                    </button>
                   </div>
                 </div>
               ) : (
@@ -236,13 +293,20 @@ function DreamTimeline({ dreams, onUpdateDream, onDeleteDream, onAnalyzeDream })
             <div className="delete-modal-content">
               <p>Are you sure you want to release "<strong>{deleteConfirmation.title}</strong>" into the cosmic void?</p>
               <p className="delete-warning">This action cannot be undone, and your dream will be lost forever.</p>
-            </div>
-            <div className="delete-modal-actions">
-              <button onClick={confirmDelete} className="confirm-delete-button">
-                <span className="button-icon">✨</span>
-                Release Dream
+            </div>            <div className="delete-modal-actions">
+              <button 
+                onClick={confirmDelete} 
+                className="confirm-delete-button"
+                disabled={isDeleting}
+              >
+                <span className="button-icon">{isDeleting ? '💫' : '✨'}</span>
+                {isDeleting ? 'Releasing...' : 'Release Dream'}
               </button>
-              <button onClick={cancelDelete} className="cancel-delete-button">
+              <button 
+                onClick={cancelDelete} 
+                className="cancel-delete-button"
+                disabled={isDeleting}
+              >
                 <span className="button-icon">🛡️</span>
                 Keep Dream
               </button>
